@@ -1,4 +1,4 @@
-const Header = ({ courseName }) => <h1>{courseName}</h1>
+const Header = ({ courseName }) => <h2>{courseName}</h2>
 
 const Part = ({ partName, exercises }) => <p>{partName} {exercises}</p> 
 
@@ -8,7 +8,7 @@ const Content = ({ parts }) => parts.map(part =>
 
 const Total = ({ parts }) => {
     const total = parts.reduce((s,p) => s + p.exercises, 0)
-    return <p>total of {total} exercises</p>
+    return <strong>total of {total} exercises</strong>
 }
 
 const Course = ({ course }) => (
