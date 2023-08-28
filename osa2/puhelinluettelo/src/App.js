@@ -1,42 +1,15 @@
 import { useState, useEffect } from 'react'
-import noteService from './services/notes'
-
-const PersonForm = ({ newName, handleNewName, newNumber, handleNewNumber, handleSubmit }) => {
-  return (
-    <form>
-      <div>
-        name: <input value={newName} onChange={handleNewName} />
-      </div>
-      <div>
-        number: <input value={newNumber} onChange={handleNewNumber} />
-      </div>
-      <div>
-        <button onClick={handleSubmit} type="submit">add</button>
-      </div>
-    </form>
-    )
-}
-
-const Filter = ({ searchText, handleSearchText }) => {
-  return (
-    <div>
-      filter shown with <input value={searchText} onChange={handleSearchText} />
-    </div>
-  )
-}
-
-const Persons = ({ persons }) => {
-  return persons.map((person) => (
-    <p key={person.name}> {person.name} {person.number} </p>)
-  )
-} 
+import contactService from './services/contactService'
+import PersonForm from './components/PersonForm'
+import Filter from './components/Filter'
+import Persons from './components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   
   useEffect(() => {
-    noteService.getAll()
-    .then(data  => {
+    contactService.getAllContacts()
+    .then(data => {
       setPersons(data)
     })
   }, [])
@@ -49,7 +22,7 @@ const App = () => {
   const handleNewNumber = (event) => setNewNumber(event.target.value)
   const handleSearchText = (event) => setSearchText(event.target.value)
 
-  const handleSubmit = (event) => {
+  const handleNewContact = (event) => {
     event.preventDefault()
     const personObject = {
       name: newName, 
@@ -57,7 +30,7 @@ const App = () => {
     }
 
     if (persons.every((person) => person.name !== newName)) {
-      noteService.create(personObject)
+      contactService.createContact(personObject)
       .then(data => {
         setPersons(persons.concat(data))
         setNewName("")
@@ -68,6 +41,21 @@ const App = () => {
       })
     } else {
       alert(`${newName} is already added to phonebook`)
+    }
+  }
+
+  const deleteContact = (personToDelete) => {
+    if (window.confirm(`Delete ${personToDelete.name} ?`)) {
+      contactService.deleteContact(personToDelete.id).then(
+        response => {
+          if (response.status === 200) {
+            console.log(`${personToDelete.name} deleted`)
+          }
+          setPersons(persons.filter(
+            person => person.id !== personToDelete.id
+          ))
+        } 
+      )
     }
   }
 
@@ -82,9 +70,9 @@ const App = () => {
       <h3>add a new</h3>
         <PersonForm newName={newName} handleNewName={handleNewName} 
                     newNumber={newNumber} handleNewNumber={handleNewNumber}
-                    handleSubmit={handleSubmit} />
+                    handleNewContact={handleNewContact} />
       <h3>Numbers</h3>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} deleteContact={deleteContact} />
     </div>
   )
 }
