@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from "axios"
+import noteService from './services/notes'
 
 const PersonForm = ({ newName, handleNewName, newNumber, handleNewNumber, handleSubmit }) => {
   return (
@@ -32,13 +32,12 @@ const Persons = ({ persons }) => {
 } 
 
 const App = () => {
-  const baseUrl = "http://localhost:3001/persons"
   const [persons, setPersons] = useState([])
   
   useEffect(() => {
-    axios.get(baseUrl)
-    .then(response => {
-      setPersons(response.data)
+    noteService.getAll()
+    .then(data  => {
+      setPersons(data)
     })
   }, [])
 
@@ -58,9 +57,9 @@ const App = () => {
     }
 
     if (persons.every((person) => person.name !== newName)) {
-      axios.post(baseUrl, personObject)
-      .then(response => {
-        setPersons(persons.concat(response.data))
+      noteService.create(personObject)
+      .then(data => {
+        setPersons(persons.concat(data))
         setNewName("")
         setNewNumber("")
       }).catch(error => {
