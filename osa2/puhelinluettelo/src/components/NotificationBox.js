@@ -13,6 +13,10 @@ const NotificationBox = ({ message }) => {
     "marginBottom": 10
   }
 
+  if (message.startsWith("ERROR")) {
+    notificationStyle.color = "red"
+  }
+
   return (
     <div style={notificationStyle}>
       {message}

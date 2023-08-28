@@ -44,7 +44,15 @@ const App = () => {
           setPersons(persons.map(person => person.id !== returnedPerson.id ? person : returnedPerson))
           setNotificationMessage(`Person '${newName}' updated`)
           setTimeout(() => {setNotificationMessage(null)}, 5000)
-        })
+        }).catch(error => {
+          console.log(error.message)
+          setNotificationMessage(`ERROR - Person '${newName}' was already removed from server`)
+          setTimeout(() => {setNotificationMessage(null)}, 5000)
+          setPersons(persons.filter(
+            person => person.id !== duplicatePerson.id
+          ))
+        }
+      )
     }
     setNewName("")
     setNewNumber("")
