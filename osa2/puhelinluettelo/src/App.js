@@ -32,10 +32,11 @@ const Persons = ({ persons }) => {
 } 
 
 const App = () => {
+  const baseUrl = "http://localhost:3001/persons"
   const [persons, setPersons] = useState([])
   
   useEffect(() => {
-    axios.get("http://localhost:3001/persons")
+    axios.get(baseUrl)
     .then(response => {
       setPersons(response.data)
     })
@@ -51,10 +52,21 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
+    const personObject = {
+      name: newName, 
+      number: newNumber
+    }
+
     if (persons.every((person) => person.name !== newName)) {
-      setPersons(persons.concat({name: newName, number: newNumber}))
-      setNewName("")
-      setNewNumber("")
+      axios.post(baseUrl, personObject)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setNewName("")
+        setNewNumber("")
+      }).catch(error => {
+        console.log("Something went wrong")
+        console.log(error)
+      })
     } else {
       alert(`${newName} is already added to phonebook`)
     }
