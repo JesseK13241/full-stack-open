@@ -1,5 +1,35 @@
 import { useState } from 'react'
 
+const PersonForm = ({ newName, handleNewName, newNumber, handleNewNumber, handleSubmit }) => {
+  return (
+    <form>
+      <div>
+        name: <input value={newName} onChange={handleNewName} />
+      </div>
+      <div>
+        number: <input value={newNumber} onChange={handleNewNumber} />
+      </div>
+      <div>
+        <button onClick={handleSubmit} type="submit">add</button>
+      </div>
+    </form>
+    )
+}
+
+const Filter = ({ searchText, handleSearchText }) => {
+  return (
+    <div>
+      filter shown with <input value={searchText} onChange={handleSearchText} />
+    </div>
+  )
+}
+
+const Persons = ({ persons }) => {
+  return persons.map((person) => (
+    <p key={person.name}> {person.name} {person.number} </p>)
+  )
+} 
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456' },
@@ -27,34 +57,22 @@ const App = () => {
     }
   }
 
-  const personsToShow = persons.filter((person) => person.name.toLowerCase().includes(searchText.toLowerCase()))
-  const personElements = personsToShow.map((person) => (
-    <p key={person.name}> {person.name} {person.number} </p>)
+  const personsToShow = persons.filter(
+    (person) => person.name.toLowerCase().includes(searchText.toLowerCase())
   )
-
+  
   return (
     <div>
       <h2>Phonebook</h2>
-        <div>
-          filter shown with <input value={searchText} onChange={handleSearchText} />
-        </div>
-      <h2>add a new</h2>
-      <form>
-        <div>
-          name: <input value={newName} onChange={handleNewName} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNewNumber} />
-        </div>
-        <div>
-          <button onClick={handleSubmit} type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {personElements}
+      <Filter searchText={searchText} handleSearchText={handleSearchText} />
+      <h3>add a new</h3>
+        <PersonForm newName={newName} handleNewName={handleNewName} 
+                    newNumber={newNumber} handleNewNumber={handleNewNumber}
+                    handleSubmit={handleSubmit} />
+      <h3>Numbers</h3>
+      <Persons persons={personsToShow} />
     </div>
   )
-
 }
 
 export default App
