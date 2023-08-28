@@ -29,19 +29,20 @@ const App = () => {
       number: newNumber
     }
 
-    if (persons.every((person) => person.name !== newName)) {
+    let duplicatePerson = persons.find(person => person.name === newName)
+    if (duplicatePerson === undefined) {
       contactService.createContact(personObject)
-      .then(data => {
-        setPersons(persons.concat(data))
-        setNewName("")
-        setNewNumber("")
-      }).catch(error => {
-        console.log("Something went wrong")
-        console.log(error)
-      })
-    } else {
-      alert(`${newName} is already added to phonebook`)
+        .then(data => setPersons(persons.concat(data)))
+    } else if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        contactService.updateContact(duplicatePerson.id, personObject)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => person.id !== returnedPerson.id ? person : returnedPerson))
+        }
+      )
     }
+    
+    setNewName("")
+    setNewNumber("")
   }
 
   const deleteContact = (personToDelete) => {
