@@ -11,7 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [searchText, setSearchText] = useState('')
   const [notificationMessage, setNotificationMessage] = useState('')
-  
+
   useEffect(() => {
     contactService.getAllContacts()
     .then(data => {
@@ -22,7 +22,6 @@ const App = () => {
   const handleNewName = (event) => setNewName(event.target.value)
   const handleNewNumber = (event) => setNewNumber(event.target.value)
   const handleSearchText = (event) => setSearchText(event.target.value)
-
   const handleNewContact = (event) => {
     event.preventDefault()
     const personObject = {

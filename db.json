@@ -4,6 +4,21 @@
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": 4
+    },
+    {
+      "name": "Mikki Hiiri",
+      "number": "1234-3232-22",
+      "id": 5
+    },
+    {
+      "name": "Aku Ankka",
+      "number": "313-313-313",
+      "id": 6
+    },
+    {
+      "name": "aku ankka",
+      "number": "3333",
+      "id": 7
     }
   ]
 }
