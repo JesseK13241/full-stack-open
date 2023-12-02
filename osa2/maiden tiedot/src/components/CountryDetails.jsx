@@ -1,4 +1,4 @@
-const CountryDetails = ({country}) => {
+const CountryDetails = ({country, showFn}) => {
     const flagStyle = {
         fontSize: 180
     }
