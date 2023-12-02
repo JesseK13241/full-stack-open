@@ -3,6 +3,8 @@ import countryService from './services/countryService'
 
 import Container from './components/Container'
 
+const apiKey = import.meta.env.VITE_SOME_KEY
+
 function App() {
   const [searchText, setSearchText] = useState("")
   const [allCountries, setAllCountries] = useState([])
@@ -27,7 +29,7 @@ function App() {
       find countries
       <input value={searchText} onChange={handleSearchText}/>
       <div>
-        <Container countries={searchResults} showFn={setSearchResults}></Container>
+        <Container countries={searchResults} showFn={setSearchResults} apiKey={apiKey}></Container>
       </div>
     </div>
   )
