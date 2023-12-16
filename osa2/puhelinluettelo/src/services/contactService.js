@@ -8,7 +8,10 @@ const getAllContacts = () => {
 
 const createContact = newObject => {
   const request = axios.post(baseUrl, newObject)
-  return request.then(response => response.data)
+  return request.then(response => {
+    console.log(response)
+    return response.data}
+    )
 }
 
 const updateContact = (id, newObject) => {

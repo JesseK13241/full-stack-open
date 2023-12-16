@@ -36,6 +36,10 @@ const App = () => {
         setPersons(persons.concat(data))
         setNotificationMessage(`Person '${newName}' added to contacts`)
         setTimeout(() => {setNotificationMessage(null)}, 5000)
+      }).catch(error => {
+        console.log(error.message)
+        setNotificationMessage(`ERROR - ${JSON.stringify(error.response.data.error)}`)
+        setTimeout(() => {setNotificationMessage(null)}, 5000)
       })
     } else if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         contactService.updateContact(duplicatePerson.id, personObject)
