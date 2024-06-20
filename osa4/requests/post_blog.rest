@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Aku Ankka",
+    "author": "Aku Ankan Tarinat",
+    "url": "https://en.wikipedia.org/wiki/Aku_Ankka",
+    "likes": 313
+}
