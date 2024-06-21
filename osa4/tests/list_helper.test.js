@@ -1,6 +1,6 @@
 const assert = require("node:assert")
 const { test, describe } = require("node:test")
-const { totalLikes, favoriteBlog } = require("../utils/list_helper")
+const { totalLikes, favoriteBlog, mostBlogs } = require("../utils/list_helper")
 
 const emptyList = []
 
@@ -102,7 +102,7 @@ describe("total likes", () => {
         assert.strictEqual(result, 0)
     })
 
-    test("list with total likes is zero", () => {
+    test("list where total likes is zero", () => {
         const result = totalLikes(listWithZeroTotalLikes)
         assert.strictEqual(result, 0)
     })
@@ -127,11 +127,31 @@ describe("favorite blog", () => {
         assert.deepStrictEqual(result, [])
     })
 
-    test("list with total likes is zero", () => {
+    test("list where total likes is zero", () => {
         const result = favoriteBlog(listWithZeroTotalLikes)
         assert.strictEqual(result._id, "5a422aa71b54a676234d17f8")
     })
 
+})
+
+
+describe("most blogs", () => {
+
+    test("list with one blog", () => {
+        const result = mostBlogs(listWithOneBlog)
+        assert.strictEqual(result.author, listWithOneBlog[0].author)
+    })
+
+    test("multiple blogs returns the author with most blogs", () => {
+        const mostCommonAuthor = "Robert C. Martin"
+        const result = mostBlogs(blogs)
+        assert.strictEqual(result.author, mostCommonAuthor)
+    })
+
+    test("empty list", () => {
+        const result = mostBlogs(emptyList)
+        assert.deepStrictEqual(result, [])
+    })
 })
 
 
