@@ -85,8 +85,25 @@ test("a blog can be deleted", async () => {
     const titles = blogsAtEnd.map(r => r.title)
     assert(!titles.includes(blogToDelete.title))
 
-    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length -1)
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
 
+})
+
+test.only("unspecified like is set to 0", async () => {
+    const blogWithoutLikes = {
+        title: "Unspecified likes",
+        author: "unknown",
+        url: "test.com",
+    }
+
+    const requestObject = await api
+        .post(API_URL)
+        .send(blogWithoutLikes)
+
+    const likelessId = requestObject.body.id
+
+    const response = await api.get(`${API_URL}/${likelessId}`)
+    assert.strictEqual(response.body.likes, 0)
 })
 
 beforeEach(async () => {
