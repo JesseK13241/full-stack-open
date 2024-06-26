@@ -48,9 +48,25 @@ test("A valid blog can be added", async () => {
     assert(contents.includes("async/await simplifies"))
 })
 
-test("Invalid blog can't be added", async () => {
+test("URLless blog can't be added", async () => {
     const newBlog = {
         title: "async/await simplifies",
+        author: "Aku ankka"
+    }
+
+    await api
+        .post(API_URL)
+        .send(newBlog)
+        .expect(400)
+
+    const response = await api.get(API_URL)
+    assert.strictEqual(response.body.length, helper.initialBlogs.length)
+})
+
+test("Titleless blog can't be added", async () => {
+    const newBlog = {
+        url: "google.com",
+        author: "Aku ankka"
     }
 
     await api
