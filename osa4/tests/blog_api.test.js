@@ -105,7 +105,7 @@ test("a blog can be deleted", async () => {
 
 })
 
-test.only("unspecified like is set to 0", async () => {
+test("unspecified like is set to 0", async () => {
     const blogWithoutLikes = {
         title: "Unspecified likes",
         author: "unknown",
@@ -120,6 +120,29 @@ test.only("unspecified like is set to 0", async () => {
 
     const response = await api.get(`${API_URL}/${likelessId}`)
     assert.strictEqual(response.body.likes, 0)
+})
+
+test("blog can be updated", async () => {
+
+    const initialBlogs = await helper.blogsInDb()
+    const blogToUpdate = initialBlogs[0]
+
+    const blogId = blogToUpdate.id
+    const previousLikes = blogToUpdate.likes
+
+    const updatedBlog = { ...blogToUpdate, likes: previousLikes + 1 }
+
+    await api
+        .put(`${API_URL}/${blogToUpdate.id}`)
+        .send(updatedBlog)
+        .expect(200)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+
+    const response = await api.get(`${API_URL}/${blogId}`)
+    assert.strictEqual(response.body.likes, previousLikes + 1)
+
 })
 
 beforeEach(async () => {
