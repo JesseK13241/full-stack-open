@@ -61,9 +61,13 @@ const App = () => {
     try {
       console.log("Creating new blog..")
       blogService.create({...newBlog, username: user.username})
+      setErrorMessage(`New blog titled: '${newBlog.title}' by '${newBlog.author}' added!`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
       setNewBlog({title: "", author:"", url:""})
     } catch (exception) {
-      setErrorMessage('Something went wrong')
+      setErrorMessage('Something went wrong', exception)
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
