@@ -111,6 +111,11 @@ const App = () => {
     )
   }
 
+  const logout = () => {
+    window.localStorage.clear()
+    window.location.reload()
+  }
+
   return (
     <div>
       <h2>Blogs</h2>
@@ -121,6 +126,7 @@ const App = () => {
       {user && <div>
         {console.log(user)}
         <p>{user.username} logged in</p>
+        <button onClick={logout}>Logout</button>
         {blogForm()}
         {blogs
         .filter(
