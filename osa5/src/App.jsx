@@ -8,7 +8,7 @@ import loginService from './services/login'
 const App = () => {
   const [blogs, setBlogs] = useState([])
 
-  const [newBlog, setNewBlog] = useState('')
+  const [newBlog, setNewBlog] = useState({title: "", author:"", url:""})
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -60,7 +60,8 @@ const App = () => {
     event.preventDefault()
     try {
       console.log("Creating new blog..")
-      blogService.create({title: newBlog, url: "temp", username: user.username})
+      blogService.create({...newBlog, username: user.username})
+      setNewBlog({title: "", author:"", url:""})
     } catch (exception) {
       setErrorMessage('Something went wrong')
       setTimeout(() => {
@@ -101,13 +102,28 @@ const App = () => {
   const blogForm = () => {
     console.log("Rendering blog form")
     return (
+      <>
+      <h2>Create new</h2>
       <form onSubmit={handleNewBlog}>
-        <input
-          value={newBlog}
-          onChange={({ target }) => setNewBlog(target.value)}
+        {console.log(newBlog)}
+        title: <input
+          value={newBlog.title}
+          onChange={({ target }) => setNewBlog({...newBlog, title: target.value})}
         />
-        <button type="submit">save</button>
+        <br />
+        author: <input
+          value={newBlog.author}
+          onChange={({ target }) => setNewBlog({...newBlog, author: target.value})}
+        />
+        <br />
+        url: <input
+          value={newBlog.url}
+          onChange={({ target }) => setNewBlog({...newBlog, url: target.value})}
+        />
+        <br />
+        <button type="submit">create</button>
       </form>
+      </>
     )
   }
 
