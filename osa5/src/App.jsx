@@ -21,6 +21,8 @@ const App = () => {
 
   const LS_KEY = 'loggedBlogAppUser'
 
+  const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
+
   useEffect(() => {
 
     async function fetchBlogs() {
@@ -68,7 +70,6 @@ const App = () => {
   const updateBlog = async (updatedBlog) => {
     const returnedBlog = await blogService.update(updatedBlog.id, updatedBlog)
     const fixedReturnedBlog = {...returnedBlog, user: user}
-    console.log("fixed returned blog", fixedReturnedBlog)
     setBlogs(blogs.map(blog => blog.id === returnedBlog.id ? fixedReturnedBlog : blog))
     return returnedBlog
   }
@@ -102,7 +103,7 @@ const App = () => {
             setBlogs={setBlogs}
           />
         </Toggleable>
-        {blogs.map(blog =>
+        {sortedBlogs.map(blog =>
           <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
         )}
       </div>}
