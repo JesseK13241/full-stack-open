@@ -118,7 +118,7 @@ const App = () => {
           />
         </Toggleable>
         {sortedBlogs.map(blog =>
-          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} removeBlog={removeBlog}/>
+          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} removeBlog={removeBlog} username={user.username}/>
         )}
       </div>}
     </div>
