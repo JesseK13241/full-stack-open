@@ -17,13 +17,7 @@ const Blog = ({ blog, updateBlog }) => {
   }
 
   const handleLike = async () => {
-    try {
-      const updatedBlog = await updateBlog({...blog, likes: blog.likes + 1})
-      console.log("Updated blog likes:")
-      console.log(updatedBlog)
-    } catch (error) {
-      console.log("ERROR updating likes: ", error)
-    }
+    await updateBlog({...blog, likes: blog.likes + 1})
   }
 
   const hiddenIfDetailsShown = { display: showDetails ? '' : "none" }

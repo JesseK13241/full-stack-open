@@ -67,7 +67,9 @@ const App = () => {
 
   const updateBlog = async (updatedBlog) => {
     const returnedBlog = await blogService.update(updatedBlog.id, updatedBlog)
-    setBlogs(blogs.map(blog => blog.id === returnedBlog.id ? returnedBlog : blog))
+    const fixedReturnedBlog = {...returnedBlog, user: user}
+    console.log("fixed returned blog", fixedReturnedBlog)
+    setBlogs(blogs.map(blog => blog.id === returnedBlog.id ? fixedReturnedBlog : blog))
     return returnedBlog
   }
 
