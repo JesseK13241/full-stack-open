@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, removeBlog }) => {
 
   const [showDetails, setShowDetails] = useState(false)
 
@@ -18,6 +18,10 @@ const Blog = ({ blog, updateBlog }) => {
 
   const handleLike = async () => {
     await updateBlog({...blog, likes: blog.likes + 1})
+  }
+
+  const handleRemove = async () => {
+    await removeBlog(blog)
   }
 
   const hiddenIfDetailsShown = { display: showDetails ? '' : "none" }
@@ -39,6 +43,8 @@ const Blog = ({ blog, updateBlog }) => {
           LIKES: {blog.likes} <button onClick={handleLike}>LIKE</button>
           <br />
           USER: {blog.user.username}
+          <br />
+          <button onClick={handleRemove}>DELETE</button>
         </div>
       </div>
     </>

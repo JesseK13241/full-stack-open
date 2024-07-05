@@ -74,6 +74,20 @@ const App = () => {
     return returnedBlog
   }
 
+  const removeBlog = async (blogToRemove) => {
+    if (window.confirm(`Remove blog '${blogToRemove.title}' by '${blogToRemove.author}'?`)) {
+      if (blogToRemove.user.username !== user.username) {
+        setNotificationMessage("ERROR: can't delete blogs that are not your own!")
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
+      } else {
+        await blogService.remove(blogToRemove.id)
+        setBlogs(blogs.filter(blog => blog.id !== blogToRemove.id))
+      }
+    }
+  }
+
   return (
     <div>
       <h2>Blogs</h2>
@@ -104,7 +118,7 @@ const App = () => {
           />
         </Toggleable>
         {sortedBlogs.map(blog =>
-          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} removeBlog={removeBlog}/>
         )}
       </div>}
     </div>
