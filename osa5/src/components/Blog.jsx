@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateBlog }) => {
 
   const [showDetails, setShowDetails] = useState(false)
 
@@ -14,6 +14,16 @@ const Blog = ({ blog }) => {
 
   const toggleVisibility = () => {
     setShowDetails(!showDetails)
+  }
+
+  const handleLike = async () => {
+    try {
+      const updatedBlog = await updateBlog({...blog, likes: blog.likes + 1})
+      console.log("Updated blog likes:")
+      console.log(updatedBlog)
+    } catch (error) {
+      console.log("ERROR updating likes: ", error)
+    }
   }
 
   const hiddenIfDetailsShown = { display: showDetails ? '' : "none" }
@@ -32,7 +42,7 @@ const Blog = ({ blog }) => {
           <br />
           URL: {blog.url}
           <br />
-          LIKES: {blog.likes} <button>LIKE</button>
+          LIKES: {blog.likes} <button onClick={handleLike}>LIKE</button>
           <br />
           USER: {blog.user.username}
         </div>
@@ -41,7 +51,5 @@ const Blog = ({ blog }) => {
 
   )
 }
-
-// , 
 
 export default Blog

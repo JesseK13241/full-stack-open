@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const BlogForm = ({ createBlog, user, setErrorMessage, blogFormRef, blogs, setBlogs }) => {
+const BlogForm = ({ createBlog, user, setNotificationMessage, blogFormRef, blogs, setBlogs }) => {
   const [newBlogInput, setNewBlogInput] = useState({ title: "", author: "", url: "" })
 
   const handleNewBlog = async (event) => {
@@ -8,17 +8,17 @@ const BlogForm = ({ createBlog, user, setErrorMessage, blogFormRef, blogs, setBl
     try {
       const newBlogObject = { ...newBlogInput, user: user }
       const createdBlogResult = await createBlog(newBlogObject)
-      setErrorMessage(`New blog titled: '${newBlogInput.title}' by '${newBlogInput.author}' added!`)
+      setNotificationMessage(`New blog titled: '${newBlogInput.title}' by '${newBlogInput.author}' added!`)
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotificationMessage(null)
       }, 5000)
       setNewBlogInput({ title: "", author: "", url: "" })
       setBlogs(blogs.concat(createdBlogResult))
       blogFormRef.current.toggleVisibility()
     } catch (exception) {
-      setErrorMessage('Something went wrong ' + exception)
+      setNotificationMessage('Something went wrong ' + exception)
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotificationMessage(null)
       }, 5000)
     }
   }

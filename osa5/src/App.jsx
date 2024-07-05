@@ -12,7 +12,7 @@ import loginService from './services/login'
 const App = () => {
   const [blogs, setBlogs] = useState([])
 
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notificationMessage, setNotificationMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -53,9 +53,9 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('ERROR: wrong credentials')
+      setNotificationMessage('ERROR: wrong credentials')
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotificationMessage(null)
       }, 5000)
     }
   }
@@ -65,10 +65,16 @@ const App = () => {
     window.location.reload()
   }
 
+  const updateBlog = async (updatedBlog) => {
+    const returnedBlog = await blogService.update(updatedBlog.id, updatedBlog)
+    setBlogs(blogs.map(blog => blog.id === returnedBlog.id ? returnedBlog : blog))
+    return returnedBlog
+  }
+
   return (
     <div>
       <h2>Blogs</h2>
-      <NotificationBox message={errorMessage} />
+      <NotificationBox message={notificationMessage} />
 
       {!user &&
         <Toggleable buttonLabel='login'>
@@ -87,7 +93,7 @@ const App = () => {
         <Toggleable buttonLabel="new blog" ref={blogFormRef}>
           <BlogForm
             createBlog={blogService.create}
-            setErrorMessage={setErrorMessage}
+            setNotificationMessage={setNotificationMessage}
             user={user}
             blogFormRef={blogFormRef}
             blogs={blogs}
@@ -95,7 +101,7 @@ const App = () => {
           />
         </Toggleable>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} user={blog.user} />
+          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
         )}
       </div>}
     </div>
