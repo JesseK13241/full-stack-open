@@ -7,15 +7,14 @@ const BlogForm = ({ createBlog, user, setErrorMessage, blogFormRef, blogs, setBl
     event.preventDefault()
     try {
       const newBlogObject = { ...newBlogInput, user: user }
-      createBlog(newBlogObject)
+      const createdBlogResult = await createBlog(newBlogObject)
       setErrorMessage(`New blog titled: '${newBlogInput.title}' by '${newBlogInput.author}' added!`)
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
       setNewBlogInput({ title: "", author: "", url: "" })
-      setBlogs(blogs.concat(newBlogObject))
+      setBlogs(blogs.concat(createdBlogResult))
       blogFormRef.current.toggleVisibility()
-      // concat
     } catch (exception) {
       setErrorMessage('Something went wrong ' + exception)
       setTimeout(() => {
