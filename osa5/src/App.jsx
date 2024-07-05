@@ -1,34 +1,40 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+
 import Blog from './components/Blog'
+import BlogForm from './components/BlogForm'
+import LoginForm from './components/LoginForm'
 import NotificationBox from './components/Notification'
+import Toggleable from './components/Toggleable'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
-
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
 
-  const [newBlog, setNewBlog] = useState({title: "", author:"", url:""})
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
+  const blogFormRef = useRef()
+
   const LS_KEY = 'loggedBlogAppUser'
 
   useEffect(() => {
-    console.log("Fetching all the blogs to memory")
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+
+    async function fetchBlogs() {
+      const foundBlogs = await blogService.getAll()
+      setBlogs(foundBlogs)
+    }
+    fetchBlogs();
+
   }, [])
 
   useEffect(() => {
-    console.log("Checking localstorage for user")
     const loggedUserJSON = window.localStorage.getItem(LS_KEY)
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      console.log("user found from localstorage: ", user)
       setUser(user)
       blogService.setToken(user.token)
     }
@@ -52,83 +58,6 @@ const App = () => {
         setErrorMessage(null)
       }, 5000)
     }
-
-    console.log('logging in with', username, password)
-  }
-
-  const handleNewBlog = async (event) => {
-    event.preventDefault()
-    try {
-      console.log("Creating new blog..")
-      blogService.create({...newBlog, username: user.username})
-      setErrorMessage(`New blog titled: '${newBlog.title}' by '${newBlog.author}' added!`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-      setNewBlog({title: "", author:"", url:""})
-    } catch (exception) {
-      setErrorMessage('Something went wrong', exception)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    }
-
-
-  }
-
-  const loginForm = () => {
-    console.log("rendering loginform")
-    return (
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
-    )
-  }
-
-  const blogForm = () => {
-    console.log("Rendering blog form")
-    return (
-      <>
-      <h2>Create new</h2>
-      <form onSubmit={handleNewBlog}>
-        {console.log(newBlog)}
-        title: <input
-          value={newBlog.title}
-          onChange={({ target }) => setNewBlog({...newBlog, title: target.value})}
-        />
-        <br />
-        author: <input
-          value={newBlog.author}
-          onChange={({ target }) => setNewBlog({...newBlog, author: target.value})}
-        />
-        <br />
-        url: <input
-          value={newBlog.url}
-          onChange={({ target }) => setNewBlog({...newBlog, url: target.value})}
-        />
-        <br />
-        <button type="submit">create</button>
-      </form>
-      </>
-    )
   }
 
   const logout = () => {
@@ -141,18 +70,32 @@ const App = () => {
       <h2>Blogs</h2>
       <NotificationBox message={errorMessage} />
 
-      {console.log("user inside return div: ", user)}
-      {!user && loginForm()}
+      {!user &&
+        <Toggleable buttonLabel='login'>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+        </Toggleable>
+      }
       {user && <div>
-        {console.log(user)}
         <p>{user.username} logged in</p>
         <button onClick={logout}>Logout</button>
-        {blogForm()}
-        {blogs
-        .filter(
-          (blog) => blog.user.username === user.username)
-        .map(blog =>
-          <Blog key={blog.id} blog={blog} />
+        <Toggleable buttonLabel="new blog" ref={blogFormRef}>
+          <BlogForm
+            createBlog={blogService.create}
+            setErrorMessage={setErrorMessage}
+            user={user}
+            blogFormRef={blogFormRef}
+            blogs={blogs}
+            setBlogs={setBlogs}
+          />
+        </Toggleable>
+        {blogs.map(blog =>
+          <Blog key={blog.id} blog={blog} user={blog.user} />
         )}
       </div>}
     </div>
