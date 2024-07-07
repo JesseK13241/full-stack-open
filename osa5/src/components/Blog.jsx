@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 
-const Blog = ({ blog, updateBlog, removeBlog, username }) => {
-
+function Blog({
+  blog, updateBlog, removeBlog, username,
+}) {
   const [showDetails, setShowDetails] = useState(false)
 
   const blogStyle = {
@@ -9,7 +11,7 @@ const Blog = ({ blog, updateBlog, removeBlog, username }) => {
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
-    marginBottom: 5
+    marginBottom: 5,
   }
 
   const toggleVisibility = () => {
@@ -17,39 +19,50 @@ const Blog = ({ blog, updateBlog, removeBlog, username }) => {
   }
 
   const handleLike = async () => {
-    await updateBlog({...blog, likes: blog.likes + 1})
+    await updateBlog({ ...blog, likes: blog.likes + 1 })
   }
 
   const handleRemove = async () => {
     await removeBlog(blog)
   }
 
-  const hiddenIfDetailsShown = { display: showDetails ? '' : "none" }
-  const visibilityToggleText = showDetails ? "hide" : "view"
+  const hiddenIfDetailsShown = { display: showDetails ? '' : 'none' }
+  const visibilityToggleText = showDetails ? 'hide' : 'view'
 
   return (
-    <>
-      <div style={blogStyle}>
-        Title: '{blog.title}'
+    <div style={blogStyle}>
+      Title:
+      {`"${blog.title}"`}
 
-        <button onClick={toggleVisibility}>{visibilityToggleText}</button>
+      <button onClick={toggleVisibility}>{visibilityToggleText}</button>
 
-        <div style={hiddenIfDetailsShown}>
-          <br />
-          Author: {blog.author}
-          <br />
-          URL: {blog.url}
-          <br />
-          LIKES: {blog.likes} <button onClick={handleLike}>LIKE</button>
-          <br />
-          USER: {blog.user.username}
-          <br />
-          {(username === blog.user.username) && <button onClick={handleRemove}>DELETE</button>}
-        </div>
+      <div style={hiddenIfDetailsShown}>
+        <br />
+        Author:
+        {`"${blog.author}"`}
+        <br />
+        URL:
+        {`"${blog.url}"`}
+        <br />
+        LIKES:
+        {`"${blog.likes}"`}
+        <button onClick={handleLike}>LIKE</button>
+        <br />
+        USER:
+        {`"${blog.username}"`}
+        <br />
+        {(username === blog.user.username) && <button onClick={handleRemove}>DELETE</button>}
       </div>
-    </>
+    </div>
 
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.isRequired,
+  updateBlog: PropTypes.func.isRequired,
+  removeBlog: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired,
 }
 
 export default Blog

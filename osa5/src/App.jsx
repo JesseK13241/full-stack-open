@@ -4,12 +4,12 @@ import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import NotificationBox from './components/Notification'
-import Toggleable from './components/Toggleable'
+import Togglable from './components/Togglable'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
 
-const App = () => {
+function App() {
   const [blogs, setBlogs] = useState([])
 
   const [notificationMessage, setNotificationMessage] = useState(null)
@@ -24,21 +24,19 @@ const App = () => {
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
 
   useEffect(() => {
-
     async function fetchBlogs() {
       const foundBlogs = await blogService.getAll()
       setBlogs(foundBlogs)
     }
     fetchBlogs();
-
   }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem(LS_KEY)
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
+      const loggedUser = JSON.parse(loggedUserJSON)
+      setUser(loggedUser)
+      blogService.setToken(loggedUser.token)
     }
   }, [])
 
@@ -46,12 +44,12 @@ const App = () => {
     event.preventDefault()
 
     try {
-      const user = await loginService.login({
+      const newUser = await loginService.login({
         username, password,
       })
-      window.localStorage.setItem(LS_KEY, JSON.stringify(user))
-      blogService.setToken(user.token)
-      setUser(user)
+      window.localStorage.setItem(LS_KEY, JSON.stringify(newUser))
+      blogService.setToken(newUser.token)
+      setUser(newUser)
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -69,8 +67,8 @@ const App = () => {
 
   const updateBlog = async (updatedBlog) => {
     const returnedBlog = await blogService.update(updatedBlog.id, updatedBlog)
-    const fixedReturnedBlog = {...returnedBlog, user: updatedBlog.user}
-    setBlogs(blogs.map(blog => blog.id === returnedBlog.id ? fixedReturnedBlog : blog))
+    const fixedReturnedBlog = { ...returnedBlog, user: updatedBlog.user }
+    setBlogs(blogs.map((blog) => (blog.id === returnedBlog.id ? fixedReturnedBlog : blog)))
     return returnedBlog
   }
 
@@ -83,7 +81,7 @@ const App = () => {
         }, 5000)
       } else {
         await blogService.remove(blogToRemove.id)
-        setBlogs(blogs.filter(blog => blog.id !== blogToRemove.id))
+        setBlogs(blogs.filter((blog) => blog.id !== blogToRemove.id))
       }
     }
   }
@@ -93,34 +91,47 @@ const App = () => {
       <h2>Blogs</h2>
       <NotificationBox message={notificationMessage} />
 
-      {!user &&
-        <Toggleable buttonLabel='login'>
-          <LoginForm
-            username={username}
-            password={password}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-            handleSubmit={handleLogin}
-          />
-        </Toggleable>
-      }
-      {user && <div>
-        <p>{user.username} logged in</p>
-        <button onClick={logout}>Logout</button>
-        <Toggleable buttonLabel="new blog" ref={blogFormRef}>
-          <BlogForm
-            createBlog={blogService.create}
-            setNotificationMessage={setNotificationMessage}
-            user={user}
-            blogFormRef={blogFormRef}
-            blogs={blogs}
-            setBlogs={setBlogs}
-          />
-        </Toggleable>
-        {sortedBlogs.map(blog =>
-          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} removeBlog={removeBlog} username={user.username}/>
+      {!user
+        && (
+          <Togglable buttonLabel="login">
+            <LoginForm
+              username={username}
+              password={password}
+              handleUsernameChange={({ target }) => setUsername(target.value)}
+              handlePasswordChange={({ target }) => setPassword(target.value)}
+              handleSubmit={handleLogin}
+            />
+          </Togglable>
         )}
-      </div>}
+      {user && (
+        <div>
+          <p>
+            {user.username}
+            {' '}
+            logged in
+          </p>
+          <button onClick={logout}>Logout</button>
+          <Togglable buttonLabel="new blog" ref={blogFormRef}>
+            <BlogForm
+              createBlog={blogService.create}
+              setNotificationMessage={setNotificationMessage}
+              user={user}
+              blogFormRef={blogFormRef}
+              blogs={blogs}
+              setBlogs={setBlogs}
+            />
+          </Togglable>
+          {sortedBlogs.map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              updateBlog={updateBlog}
+              removeBlog={removeBlog}
+              username={user.username}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
