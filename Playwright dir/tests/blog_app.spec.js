@@ -46,7 +46,7 @@ describe('Blog app', () => {
       await expect(page.getByText('Title:playwright blog title')).toBeVisible()
     })
 
-    describe('and several blogs exists', () => {
+    describe('and a blog exists', () => {
       beforeEach(async ({ page }) => {
         await createBlog(page, "1st playwright blog title", "1st playwright blog author", "1st playwright blog url")
       })
@@ -57,6 +57,17 @@ describe('Blog app', () => {
         await page.getByRole('button', { name: 'LIKE' }).click()
         await expect(page.getByText('Likes:1')).toBeVisible()
       })
+
+      test('test deletion works', async ({ page }) => {
+        page.on('dialog', async (dialog) => {
+          await dialog.accept()
+        });
+        await expect(page.getByText('Title:1st playwright blog title')).toBeVisible()
+        await page.getByRole('button', { name: 'view' }).click()
+        await page.getByRole('button', { name: 'DELETE' }).click()
+        await expect(page.getByText('Title:1st playwright blog title')).not.toBeVisible()
+      })
+
     })
 
   })  
