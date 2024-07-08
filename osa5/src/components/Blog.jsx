@@ -31,7 +31,7 @@ function Blog({
 
   return (
     <div style={blogStyle}>
-      <p id="blogtitle">
+      <p className="blogtitle">
         Title:
         {blog.title}
       </p>

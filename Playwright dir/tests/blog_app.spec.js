@@ -1,5 +1,5 @@
 const { describe, beforeEach, test, expect } = require('@playwright/test')
-const { loginWith, logout, createBlog } = require('./helper')
+const { loginWith, logout, createBlog, likeByTitle } = require('./helper')
 
 describe('Blog app', () => {
 
@@ -51,9 +51,9 @@ describe('Blog app', () => {
       })
   
       test('like can be incremented', async ({ page }) => {
-        await page.getByRole('button', { name: 'view' }).click()
-        await expect(page.getByText('Likes:0')).toBeVisible()
-        await page.getByRole('button', { name: 'LIKE' }).click()
+        await likeByTitle(page, "1st playwright blog title")
+        const blogElement = await page.getByText("Title:1st playwright blog title").locator('..')
+        await blogElement.getByRole('button', { name: 'view' }).click()
         await expect(page.getByText('Likes:1')).toBeVisible()
       })
 
@@ -80,6 +80,30 @@ describe('Blog app', () => {
         await expect(page.getByText('Title:1st playwright blog title')).toBeVisible()
         await page.getByRole('button', { name: 'view' }).click()
         await expect(page.getByRole('button', { name: 'DELETE' })).not.toBeVisible()
+      })
+
+      test("blogs are ordered by likes", async ({page}) => {
+        await createBlog(page, "2nd blog title", "2nd blog author", "2nd blog url")
+        await createBlog(page, "3rd blog title", "3rd blog author", "3rd blog url")
+        
+        await likeByTitle(page, "3rd blog title")
+
+        await likeByTitle(page, "2nd blog title")
+        await likeByTitle(page, "2nd blog title")
+
+        // 2 > 3 > 1
+
+        const blogElements = await page.locator("p.blogtitle").all()
+
+        const firstElem = await blogElements[0].textContent()
+        expect(firstElem).toContain("2")
+
+        const secondElem = await blogElements[1].textContent()
+        expect(secondElem).toContain("3")
+
+        const thirdElem = await blogElements[2].textContent()
+        expect(thirdElem).toContain("1")
+        
       })
 
     })
