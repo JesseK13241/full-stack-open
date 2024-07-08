@@ -24,9 +24,25 @@ test('Renders correctly', async () => {
   const urlElement = screen.queryByText('URL:Unknown URL')
   expect(urlElement.parentElement).toHaveStyle('display: none')
 
-  /* const mockHandler = vi.fn()
+  const likesElement = screen.queryByText('Likes:0')
+  expect(likesElement.parentElement).toHaveStyle('display: none')
+
+  const userElement = screen.queryByText('User:none')
+  expect(userElement.parentElement).toHaveStyle('display: none')
+
   const user = userEvent.setup()
-  const button = screen.getByText('make not important')
+  const button = screen.getByText('view')
   await user.click(button)
-  expect(mockHandler.mock.calls).toHaveLength(1) */
+
+  const authorElementNow = screen.queryByText('Author:Anonymous author')
+  expect(authorElementNow.parentElement).not.toHaveStyle('display: none')
+
+  const urlElementNow = screen.queryByText('URL:Unknown URL')
+  expect(urlElementNow.parentElement).not.toHaveStyle('display: none')
+
+  const likesElementNow = screen.queryByText('Likes:0')
+  expect(likesElementNow.parentElement).not.toHaveStyle('display: none')
+
+  const userElementNow = screen.queryByText('User:none')
+  expect(userElementNow.parentElement).not.toHaveStyle('display: none')
 })
