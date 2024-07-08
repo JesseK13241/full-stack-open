@@ -12,7 +12,7 @@ import loginService from './services/login'
 function App() {
   const [blogs, setBlogs] = useState([])
 
-  const [notificationMessage, setNotificationMessage] = useState(null)
+  const [notificationMessage, setNotificationMessage] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)

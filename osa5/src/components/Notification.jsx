@@ -20,7 +20,7 @@ function Notification({ message }) {
   }
 
   return (
-    <div style={notificationStyle}>
+    <div className="notification" style={notificationStyle}>
       {message}
     </div>
   )

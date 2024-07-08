@@ -70,8 +70,7 @@ function Blog({
 }
 
 Blog.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  blog: PropTypes.object.isRequired,
+  blog: PropTypes.isRequired,
   updateBlog: PropTypes.func.isRequired,
   removeBlog: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired,

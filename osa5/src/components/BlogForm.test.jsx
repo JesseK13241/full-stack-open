@@ -27,37 +27,3 @@ test('<BlogForm /> calls with correct data', async () => {
   expect(createBlog.mock.calls[0][0].author).toBe('testing form author...')
   expect(createBlog.mock.calls[0][0].url).toBe('testing form url...')
 })
-
-/*
-
-<body>
-  <div>
-    <h2>
-      Create new
-    </h2>
-    <form>
-      title:
-      <input
-        value=""
-      />
-      <br />
-      author:
-      <input
-        value=""
-      />
-      <br />
-      url:
-      <input
-        value=""
-      />
-      <br />
-      <button
-        type="submit"
-      >
-        create
-      </button>
-    </form>
-  </div>
-</body>
-
-*/

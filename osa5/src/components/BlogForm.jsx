@@ -48,7 +48,7 @@ function BlogForm({
         <input
           value={newBlogInput.url}
           onChange={({ target }) => setNewBlogInput({ ...newBlogInput, url: target.value })}
-          placeholder="new blog url"
+          placeholder="new blog "
         />
         <br />
         <button type="submit">create</button>
