@@ -31,27 +31,38 @@ function Blog({
 
   return (
     <div style={blogStyle}>
-      Title:
-      {`"${blog.title}"`}
+      <p id="blogtitle">
+        Title:
+        {blog.title}
+      </p>
 
       <button onClick={toggleVisibility}>{visibilityToggleText}</button>
 
       <div style={hiddenIfDetailsShown}>
-        <br />
-        Author:
-        {`"${blog.author}"`}
-        <br />
-        URL:
-        {`"${blog.url}"`}
-        <br />
-        LIKES:
-        {`"${blog.likes}"`}
+        <p id="author">
+          Author:
+          {blog.author}
+        </p>
+
+        <p id="url">
+          URL:
+          {blog.url}
+        </p>
+
+        <p id="likes">
+          Likes:
+          {blog.likes}
+        </p>
+
         <button onClick={handleLike}>LIKE</button>
-        <br />
-        USER:
-        {`"${blog.username}"`}
-        <br />
+
+        <p id="user">
+          User:
+          {blog.user.username}
+        </p>
+
         {(username === blog.user.username) && <button onClick={handleRemove}>DELETE</button>}
+
       </div>
     </div>
 
@@ -59,7 +70,8 @@ function Blog({
 }
 
 Blog.propTypes = {
-  blog: PropTypes.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  blog: PropTypes.object.isRequired,
   updateBlog: PropTypes.func.isRequired,
   removeBlog: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired,

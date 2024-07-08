@@ -31,21 +31,18 @@ function BlogForm({
       <h2>Create new</h2>
       <form onSubmit={handleNewBlog}>
         title:
-        {' '}
         <input
           value={newBlogInput.title}
           onChange={({ target }) => setNewBlogInput({ ...newBlogInput, title: target.value })}
         />
         <br />
         author:
-        {' '}
         <input
           value={newBlogInput.author}
           onChange={({ target }) => setNewBlogInput({ ...newBlogInput, author: target.value })}
         />
         <br />
         url:
-        {' '}
         <input
           value={newBlogInput.url}
           onChange={({ target }) => setNewBlogInput({ ...newBlogInput, url: target.value })}

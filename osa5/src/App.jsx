@@ -107,7 +107,6 @@ function App() {
         <div>
           <p>
             {user.username}
-            {' '}
             logged in
           </p>
           <button onClick={logout}>Logout</button>
