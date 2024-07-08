@@ -11,7 +11,9 @@ test('Renders correctly', async () => {
     user: { username: 'none' },
   }
 
-  const { container } = render(<Blog blog={blogToRender} />)
+  const mockHandler = vi.fn()
+
+  const { container } = render(<Blog blog={blogToRender} updateBlog={mockHandler} />)
 
   screen.debug()
 
@@ -45,4 +47,11 @@ test('Renders correctly', async () => {
 
   const userElementNow = screen.queryByText('User:none')
   expect(userElementNow.parentElement).not.toHaveStyle('display: none')
+
+  const userDirver = userEvent.setup()
+  const likeButton = screen.getByText('LIKE')
+  await userDirver.click(likeButton)
+  await userDirver.click(likeButton)
+
+  expect(mockHandler.mock.calls).toHaveLength(2)
 })
