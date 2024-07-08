@@ -1,11 +1,10 @@
 const { describe, beforeEach, test, expect } = require('@playwright/test')
-const { loginWith, createBlog } = require('./helper')
+const { loginWith, logout, createBlog } = require('./helper')
 
 describe('Blog app', () => {
 
   beforeEach(async ({ page, request }) => {
     await request.post('http:localhost:3001/api/testing/reset')
-    console.log("posted to 'http:localhost:3001/api/testing/reset'")
     await request.post('http://localhost:3001/api/users', {
       data: {
         name: 'TESTING',
@@ -66,6 +65,21 @@ describe('Blog app', () => {
         await page.getByRole('button', { name: 'view' }).click()
         await page.getByRole('button', { name: 'DELETE' }).click()
         await expect(page.getByText('Title:1st playwright blog title')).not.toBeVisible()
+      })
+
+      test("can't see delete if blog by some other user", async ({ page, request }) => {
+        await logout(page)
+        await request.post('http://localhost:3001/api/users', {
+          data: {
+            name: 'TESTING2',
+            username: 'test2',
+            password: 'test2'
+          }
+        })
+        await loginWith(page, 'test2', 'test2')
+        await expect(page.getByText('Title:1st playwright blog title')).toBeVisible()
+        await page.getByRole('button', { name: 'view' }).click()
+        await expect(page.getByRole('button', { name: 'DELETE' })).not.toBeVisible()
       })
 
     })
