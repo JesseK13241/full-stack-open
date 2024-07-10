@@ -30,13 +30,13 @@ const App = () => {
       type: 'RESET'
     })
   }
-  
+
 
   // Already did 6.2: Unicafe revisited, step2
   return (
     <div>
-      <button onClick={good}>good</button> 
-      <button onClick={ok}>ok</button> 
+      <button onClick={good}>good</button>
+      <button onClick={ok}>ok</button>
       <button onClick={bad}>bad</button>
       <button onClick={reset}>reset stats</button>
       <div>good {store.getState().good}</div>
