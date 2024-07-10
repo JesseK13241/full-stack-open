@@ -43,6 +43,7 @@ const reducer = (state = initialState, action) => {
 }
 
 export const increaseVote = (id) => {
+  // Action creator
   return {
     type: 'INCREASE_VOTE',
     payload: { id }
@@ -50,6 +51,7 @@ export const increaseVote = (id) => {
 }
 
 export const createAnecdote = (content) => {
+  // Action creator
   return {
     type: "CREATE_ANECDOTE",
     payload: { content }
