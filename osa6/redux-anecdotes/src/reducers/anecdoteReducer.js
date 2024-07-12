@@ -3,14 +3,12 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { setNotification } from './notificationReducer'
 
+import anecdoteService from '../services/anecdotes'
 
 const anecdoteSlice = createSlice({
   name: 'anecdotes',
   initialState: [],
   reducers: {
-    createAnecdote(state, action) {
-      state.push(action.payload)
-    },
     increaseVote(state, action) {
       const id = action.payload
       const anecdoteToChange = state.find(n => n.id === id)
@@ -27,12 +25,28 @@ const anecdoteSlice = createSlice({
   },
 })
 
-export const { createAnecdote, increaseVote, appendAnecdote, setAnecdotes } = anecdoteSlice.actions
+export const { increaseVote, appendAnecdote, setAnecdotes } = anecdoteSlice.actions
 
-export const voteAnecdote = (id) => {
+export const voteAnecdote = (id, currentVotes) => {
   return async (dispatch) => {
     dispatch(increaseVote(id))
-    dispatch(setNotification(`Voted for anecdote with id: ${id}`, 5000))
+    await anecdoteService.increaseVote(id, currentVotes)
+    dispatch(setNotification(`Voted for anecdote with id: ${id}`, 5))
+  }
+}
+
+export const initializeAnecdotes = () => {  
+  return async dispatch => {    
+    const notes = await anecdoteService.getAll()    
+    dispatch(setAnecdotes(notes))  
+  }
+}
+
+export const createAnecdote = content => {  
+  return async dispatch => {    
+    const newNote = await anecdoteService.createNew(content)    
+    dispatch(appendAnecdote(newNote))
+    dispatch(setNotification(`Created anecdote: ${content}`, 5))
   }
 }
 

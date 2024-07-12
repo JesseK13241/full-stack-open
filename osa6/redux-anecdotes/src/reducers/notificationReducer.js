@@ -22,7 +22,7 @@ export const setNotification = (message, duration) => {
     dispatch(setNotificationMessage(message))
     setTimeout(() => {
       dispatch(clearNotification())
-    }, duration)
+    }, duration * 1000)
   }
 }
 
