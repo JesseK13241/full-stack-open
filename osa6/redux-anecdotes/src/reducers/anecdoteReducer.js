@@ -1,6 +1,7 @@
 /* eslint-disable no-case-declarations */
 
 import { createSlice } from '@reduxjs/toolkit'
+import { setNotification } from './notificationReducer'
 
 const anecdotesAtStart = [
   'If it hurts, do it more often',
@@ -28,24 +29,25 @@ const anecdoteSlice = createSlice({
   initialState,
   reducers: {
     createAnecdote(state, action) {
-      console.log(JSON.parse(JSON.stringify(state)))
-      state.push(asObject(action.payload.content))
+      state.push(asObject(action.payload))
     },
     increaseVote(state, action) {
       const id = action.payload
-      console.log('Increasing vote for id:', id)
-      console.log('Current state:', JSON.parse(JSON.stringify(state)))
       const anecdoteToChange = state.find(n => n.id === id)
-      const changedAnecdote = { 
-        ...anecdoteToChange, 
-        votes: anecdoteToChange.votes + 1
+      if (anecdoteToChange) {
+        anecdoteToChange.votes += 1
       }
-      return state.map(note =>
-        note.id !== id ? note : changedAnecdote 
-      )     
     }
   },
 })
 
 export const { createAnecdote, increaseVote } = anecdoteSlice.actions
+
+export const voteAnecdote = (id) => {
+  return async (dispatch) => {
+    dispatch(increaseVote(id))
+    dispatch(setNotification(`Voted for anecdote with id: ${id}`, 5000))
+  }
+}
+
 export default anecdoteSlice.reducer
