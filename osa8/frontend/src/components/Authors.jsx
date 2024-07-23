@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from '@apollo/client'
 import { ALL_AUTHORS, EDIT_AUTHOR } from "../queries"
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const Authors = (props) => {
 
@@ -16,11 +16,18 @@ const Authors = (props) => {
     console.log( { authorNameToUpdate, authorYearToUpdate })
     editAuthor({  variables: { name: authorNameToUpdate, setBornTo: authorYearToUpdate } })
 
-    setAuthorNameToUpdate("")
     setAuthorYearToUpdate(0)
   }
 
   const result = useQuery(ALL_AUTHORS)
+
+  useEffect(() => {
+    // Set the initial value of authorNameToUpdate when the component mounts
+    if (result.data && result.data.allAuthors.length > 0) {
+      setAuthorNameToUpdate(result.data.allAuthors[0].name)
+    }
+  }, [result.data])
+
   if (!result.data || !props.show) {
     return null
   }
@@ -50,18 +57,23 @@ const Authors = (props) => {
       <h2>Set birthyear</h2>
       <form onSubmit={handleAuthorUpdate}>
         <div>
-          name
-          <input
-            value={authorNameToUpdate}
-            onChange={({ target }) => setAuthorNameToUpdate(target.value)}
-          />
+          <label htmlFor="author" >name</label>
+          <select 
+            id="author" 
+            name="author"
+            value={authorNameToUpdate} 
+            onChange={({ target }) => setAuthorNameToUpdate(target.value)} >
+            {authors.map((a) => (
+              <option key={a.name} value={a.name}>{a.name}</option>
+            ))}
+          </select>
         </div>
         <div>
           born
           <input
             required
             type="number"
-            value={authorYearToUpdate ? authorYearToUpdate : ""}
+            value={authorYearToUpdate || ""}
             onChange={({ target }) => setAuthorYearToUpdate(parseInt(target.value))}
           />
         </div>
