@@ -1,14 +1,6 @@
-import { gql, useQuery } from '@apollo/client'
-
-const ALL_AUTHORS = gql`
-query {
-  allAuthors {
-    name,
-    born,
-    bookCount
-  }
-}`
-
+import { useQuery } from '@apollo/client'
+import { ALL_AUTHORS } from "../queries"
+import PropTypes from 'prop-types'
 
 const Authors = (props) => {
 
@@ -40,6 +32,10 @@ const Authors = (props) => {
       </table>
     </div>
   )
+}
+
+Authors.propTypes = {
+  show: PropTypes.bool
 }
 
 export default Authors
