@@ -13,7 +13,6 @@ query {
 const Authors = (props) => {
 
   const result = useQuery(ALL_AUTHORS)
-
   if (!result.data || !props.show) {
     return null
   }
