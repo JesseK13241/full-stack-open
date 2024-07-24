@@ -1,5 +1,6 @@
 const { ApolloServer } = require("@apollo/server")
 const { startStandaloneServer } = require("@apollo/server/standalone")
+const { GraphQLError } = require('graphql')
 const gql = require("graphql-tag")
 const mongoose = require("mongoose")
 const Author = require("./models/author")
@@ -90,18 +91,14 @@ const resolvers = {
         try {
           await author.save()
         } catch (error) {
-          throw new UserInputError(error.message, {
-            invalidArgs: args
-          })
+          throw new GraphQLError(error.message)
         }
       }
       const book = new Book({ ...args, author: author._id })
       try {
         await book.save()
       } catch (error) {
-        throw new UserInputError(error.message, {
-          invalidArgs: args
-        })
+        throw new GraphQLError(error.message)
       }
       return book
     },
@@ -110,9 +107,7 @@ const resolvers = {
       try {
         await author.save()
       } catch (error) {
-        throw new UserInputError(error.message, {
-          invalidArgs: args
-        })
+        throw new GraphQLError(error.message)
       }
       return author
     },
@@ -125,9 +120,7 @@ const resolvers = {
       try {
         await author.save()
       } catch (error) {
-        throw new UserInputError(error.message, {
-          invalidArgs: args
-        })
+        throw new GraphQLError(error.message)
       }
       return author
     }
