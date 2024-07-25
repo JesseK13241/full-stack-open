@@ -76,14 +76,19 @@ const typeDefs = gql`
 const resolvers = {
   Author: {
     bookCount: async root => {
+      console.log("Fetching author book count.")
       return await Book.countDocuments({ author: root._id })
     }
   },
   Query: {
     allAuthors: async (root, args) => {
+      console.log("Fetching all authors.")
       return Author.find({})
     },
-    authorCount: async () => Author.collection.countDocuments(),
+    authorCount: async () => {
+      console.log("Fetching author count.")
+      return Author.collection.countDocuments()
+    },
     allBooks: async (root, { author, genre }) => {
       let query = {}
       console.log(`Searching with author '${author}' and genre '${genre}'`)
@@ -98,13 +103,18 @@ const resolvers = {
       }
       return await Book.find(query).populate("author")
     },
-    bookCount: async () => Book.collection.countDocuments(),
+    bookCount: async () => {
+      console.log("Fetching book count.")
+      return Book.collection.countDocuments()
+    },
     me: (root, args, context) => {
+      console.log("Fetching current user.")
       return context.currentUser
     }
   },
   Mutation: {
     addBook: async (root, args, context) => {
+      console.log("Attempting to add a new book.")
       const currentUser = context.currentUser
       if (!currentUser) {
         throw new GraphQLError("not authenticated", {
@@ -114,6 +124,7 @@ const resolvers = {
 
       let author = await Author.findOne({ name: args.author })
       if (!author) {
+        console.log("Author not found for the new book. Creating new author...")
         author = new Author({ name: args.author })
         try {
           await author.save()
@@ -124,6 +135,7 @@ const resolvers = {
       const book = new Book({ ...args, author: author._id })
       try {
         await book.save()
+        console.log("New book created.")
       } catch (error) {
         throw new GraphQLError(error.message)
       }
@@ -133,12 +145,14 @@ const resolvers = {
       const author = new Author({ ...args })
       try {
         await author.save()
+        console.log("New author created.")
       } catch (error) {
         throw new GraphQLError(error.message)
       }
       return author
     },
     editAuthor: async (root, args, context) => {
+      console.log("Attempting to edit author.")
       const currentUser = context.currentUser
       if (!currentUser) {
         throw new GraphQLError("not authenticated", {
@@ -147,17 +161,20 @@ const resolvers = {
       }
       const author = await Author.findOne({ name: args.name })
       if (!author) {
+        console.log("Author not found.")
         return null
       }
       author.born = args.setBornTo
       try {
         await author.save()
+        console.log("Author edit saved.")
       } catch (error) {
         throw new GraphQLError(error.message)
       }
       return author
     },
     createUser: async (root, args) => {
+      console.log("Attempting to create a new user.")
       const user = new User({ username: args.username })
 
       return user.save().catch(error => {
@@ -171,6 +188,7 @@ const resolvers = {
       })
     },
     login: async (root, args) => {
+      console.log("Attempting login.")
       const user = await User.findOne({ username: args.username })
 
       if (!user || args.password !== "secret") {

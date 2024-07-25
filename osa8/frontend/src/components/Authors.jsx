@@ -3,19 +3,22 @@ import { ALL_AUTHORS, EDIT_AUTHOR } from "../queries"
 import PropTypes from 'prop-types'
 import { useState, useEffect } from 'react'
 
-const Authors = (props) => {
+const Authors = ({ show, setError, token }) => {
 
   const [authorNameToUpdate, setAuthorNameToUpdate] = useState("")
   const [authorYearToUpdate, setAuthorYearToUpdate] = useState(0)
   const [ editAuthor ] = useMutation(EDIT_AUTHOR, {refetchQueries: [ { query: ALL_AUTHORS } ]})
 
-  const handleAuthorUpdate = (event) => {
+  const handleAuthorUpdate = async (event) => {
     event.preventDefault()
 
     console.log('updating author...')
     console.log( { authorNameToUpdate, authorYearToUpdate })
-    editAuthor({  variables: { name: authorNameToUpdate, setBornTo: authorYearToUpdate } })
-
+    try {
+      await editAuthor({  variables: { name: authorNameToUpdate, setBornTo: authorYearToUpdate } })
+    } catch (e) {
+      setError(e.message)
+    }
     setAuthorYearToUpdate(0)
   }
 
@@ -28,7 +31,7 @@ const Authors = (props) => {
     }
   }, [result.data])
 
-  if (!result.data || !props.show) {
+  if (!result.data || !show) {
     return null
   }
 
@@ -77,14 +80,16 @@ const Authors = (props) => {
             onChange={({ target }) => setAuthorYearToUpdate(parseInt(target.value))}
           />
         </div>
-        <button type="submit">update author</button>
+        <button type="submit" disabled={!token}>update author</button>
       </form>
     </div>
   )
 }
 
 Authors.propTypes = {
-  show: PropTypes.bool
+  setError: PropTypes.func,
+  show: PropTypes.bool,
+  token: PropTypes.string
 }
 
 export default Authors
