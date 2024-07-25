@@ -1,23 +1,29 @@
 import { useState, useEffect } from "react"
+
 import Authors from "./components/Authors"
 import Books from "./components/Books"
 import NewBook from "./components/NewBook"
 import LoginForm from "./components/LoginForm"
 import Notify from "./components/Notify"
-import { BOOK_ADDED } from './queries.js'
-import { useApolloClient, useSubscription } from '@apollo/client'
+import { ALL_BOOKS, BOOK_ADDED } from "./queries.js"
+import { useApolloClient, useSubscription } from "@apollo/client"
 
 const App = () => {
   const [page, setPage] = useState("authors")
   const [token, setToken] = useState(null)
-  const [errorMessage, setErrorMessage] = useState("")
+  const [notification, setNotification] = useState("")
   const client = useApolloClient()
 
   useSubscription(BOOK_ADDED, {
     onData: ({ data }) => {
-      const newBookTitle = data.data.bookAdded.title
-      console.log("New book", newBookTitle)
-      setErrorMessage(`Book '${newBookTitle}' was added.`)
+      const newBook = data.data.bookAdded
+      console.log("New book object:", newBook)
+      setNotification(`Book '${newBook.title}' was added.`)
+      client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+        return {
+          allBooks: allBooks.concat(newBook)
+        }
+      })
     }
   })
 
@@ -38,8 +44,8 @@ const App = () => {
 
   return (
     <>
-      <Notify errorMessage={errorMessage} />
-    
+      <Notify errorMessage={notification} />
+
       {token ? (
         <>
           <p>{username} logged in</p>
@@ -47,7 +53,7 @@ const App = () => {
         </>
       ) : (
         <LoginForm
-          setError={setErrorMessage}
+          setError={setNotification}
           setToken={setToken}
         />
       )}
@@ -55,13 +61,24 @@ const App = () => {
       <div>
         <button onClick={() => setPage("authors")}>authors</button>
         <button onClick={() => setPage("books")}>books</button>
-        <button onClick={() => setPage("add")} disabled={!token}>add book</button>
+        <button
+          onClick={() => setPage("add")}
+          disabled={!token}>
+          add book
+        </button>
       </div>
 
-      <Authors show={page === "authors"} setError={setErrorMessage} token={token}/>
+      <Authors
+        show={page === "authors"}
+        setError={setNotification}
+        token={token}
+      />
       <Books show={page === "books"} />
-      <NewBook show={page === "add"} setError={setErrorMessage} setPage={setPage}/>
-
+      <NewBook
+        show={page === "add"}
+        setError={setNotification}
+        setPage={setPage}
+      />
     </>
   )
 }
