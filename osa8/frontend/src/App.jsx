@@ -4,13 +4,22 @@ import Books from "./components/Books"
 import NewBook from "./components/NewBook"
 import LoginForm from "./components/LoginForm"
 import Notify from "./components/Notify"
-import { useApolloClient } from "@apollo/client"
+import { BOOK_ADDED } from './queries.js'
+import { useApolloClient, useSubscription } from '@apollo/client'
 
 const App = () => {
   const [page, setPage] = useState("authors")
   const [token, setToken] = useState(null)
   const [errorMessage, setErrorMessage] = useState("")
   const client = useApolloClient()
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      const newBookTitle = data.data.bookAdded.title
+      console.log("New book", newBookTitle)
+      setErrorMessage(`Book '${newBookTitle}' was added.`)
+    }
+  })
 
   useEffect(() => {
     const token = localStorage.getItem("BookApp-user-token")

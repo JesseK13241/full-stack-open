@@ -55,9 +55,15 @@ const resolvers = {
         })
       }
 
+      if (!args.author) {
+        throw new GraphQLError("Author name is required", {
+          extensions: { code: "BAD_USER_INPUT" }
+        })
+      }
+      
       let author = await Author.findOne({ name: args.author })
       if (!author) {
-        console.log("Author not found for the new book. Creating new author...")
+        console.log("Author not found for the new book. Creating new author for", args.author)
         author = new Author({ name: args.author })
         try {
           await author.save()
