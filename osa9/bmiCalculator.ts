@@ -25,13 +25,15 @@ const calculateBMI = (height_cm: number, weight_kg: number): string => {
   return `Obese Class III: ${BMI} BMI`;
 };
 
-const height = Number(process.argv[2]);
-const weight = Number(process.argv[3]);
+if (require.main === module) {
+  const height = Number(process.argv[2]);
+  const weight = Number(process.argv[3]);
 
-if (process.argv.length !== 4 || isNaN(height) || isNaN(weight)) {
-  console.log("Incorrect input");
-} else {
-  console.log(calculateBMI(height, weight));
+  if (process.argv.length !== 4 || isNaN(height) || isNaN(weight)) {
+    console.log("Incorrect input");
+  } else {
+    console.log(calculateBMI(height, weight));
+  }
 }
 
 export default calculateBMI;

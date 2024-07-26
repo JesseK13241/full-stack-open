@@ -39,15 +39,18 @@ const calculateExercises = (
   };
 };
 
-const args = process.argv.slice(2);
-const args_as_numbers = args.map(arg => Number(arg));
-const valid_args = args_as_numbers.filter(num => !isNaN(num));
+if (require.main === module) {
+  const args = process.argv.slice(2);
+  const args_as_numbers = args.map(arg => Number(arg));
+  const valid_args = args_as_numbers.filter(num => !isNaN(num));
 
-if (args_as_numbers.length !== valid_args.length) {
-  console.log("Invalid input");
+  if (args_as_numbers.length !== valid_args.length) {
+    console.log("Invalid input");
+  }
+
+  const target = args_as_numbers[0];
+  args_as_numbers.shift(); // remove target
+
+  console.log(calculateExercises(args_as_numbers, target));
 }
-
-const target = args_as_numbers[0];
-args_as_numbers.shift(); // remove target
-
-console.log(calculateExercises(args_as_numbers, target));
+export default calculateExercises;
