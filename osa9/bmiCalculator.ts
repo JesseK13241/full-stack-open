@@ -1,5 +1,5 @@
-const calculateBmi  = (height_cm: number, weight_kg: number) =>  {
-    const height_m = height_cm / 100
+const calculateBMI  = (height_cm: number, weight_kg: number): string =>  {
+  const height_m = height_cm / 100
     const BMI = (weight_kg / (height_m ** 2))
     if (BMI < 16) {
       return `Severe Thinness: ${BMI} BMI`
@@ -25,12 +25,13 @@ const calculateBmi  = (height_cm: number, weight_kg: number) =>  {
     return `Obese Class III: ${BMI} BMI`
 };
 
-const height = parseInt(process.argv[2])
-const weight = parseInt(process.argv[3])
+const height = Number(process.argv[2])
+const weight = Number(process.argv[3])
 
 if (process.argv.length !== 4 || isNaN(height) || isNaN(weight)) {
   console.log("Incorrect input")
 } else {
-  console.log(calculateBmi(height, weight))
+  console.log(calculateBMI(height, weight))
 }
 
+export default calculateBMI

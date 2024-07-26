@@ -37,7 +37,7 @@ const calculateExercises = (
 }
 
 const args = process.argv.slice(2)
-const args_as_numbers = args.map(arg => parseFloat(arg));
+const args_as_numbers = args.map(arg => Number(arg));
 const valid_args = args_as_numbers.filter(num => !isNaN(num))
 
 if (args_as_numbers.length !== valid_args.length) {
