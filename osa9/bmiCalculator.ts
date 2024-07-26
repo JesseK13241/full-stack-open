@@ -25,4 +25,12 @@ const calculateBmi  = (height_cm: number, weight_kg: number) =>  {
     return `Obese Class III: ${BMI} BMI`
 };
 
-console.log(calculateBmi(180, 74))
+const height = parseInt(process.argv[2])
+const weight = parseInt(process.argv[3])
+
+if (process.argv.length !== 4 || isNaN(height) || isNaN(weight)) {
+  console.log("Incorrect input")
+} else {
+  console.log(calculateBmi(height, weight))
+}
+
