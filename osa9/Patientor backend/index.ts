@@ -5,6 +5,23 @@ const app = express();
 app.use(cors()); 
 app.use(express.json());
 
+import { Request, Response, NextFunction } from 'express';
+
+const jsonErrorHandler = (
+  error: Error,
+  _req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  if (error instanceof SyntaxError && 'body' in error) {
+    res.status(400).json({ error: 'Invalid JSON' });
+  } else {
+    next();
+  }
+};
+
+app.use(jsonErrorHandler);
+
 import diagnosisRouter from "./routes/diagnoses"; 
 app.use('/api/diagnoses', diagnosisRouter);
 
