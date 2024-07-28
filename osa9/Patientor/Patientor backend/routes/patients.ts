@@ -1,11 +1,23 @@
 import express from 'express';
-import { getPatientsWithoutSSN, addNewPatientIfValid } from "../services/patients";
+import { getPatientsWithoutSSN, addNewPatientIfValid, getPatientByID } from "../services/patients";
 
 const router = express.Router();
 
 router.get('/', (_req, res) => {
   const data = getPatientsWithoutSSN();
   res.json(data);
+});
+
+router.get('/:id', (req, res) => {
+  const id = req.params.id;
+  const patient = getPatientByID(id);
+  if (patient) {
+    patient.entries = [];
+    res.json(patient);
+  } else {
+    res.status(400).send("Patient not found");
+  }
+  
 });
 
 router.post("/", (req, res) => {
