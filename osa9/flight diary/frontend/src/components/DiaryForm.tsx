@@ -23,22 +23,29 @@ interface DiaryFormProps {
 }
 
 export const DiaryForm: React.FC<DiaryFormProps> = ({ handleNewDiary }) => {
-  const dateInput = useField("text");
-  const visibilityInput = useField("text");
-  const weatherInput = useField("text");
+  const dateInput = useField("date");
   const commentInput = useField("text");
+
+  const [weatherValue, setWeatherValue] = useState('');
+  const [visibilityValue, setvisibilityValue] = useState('');
+
+  const handlevisibilityValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setvisibilityValue(event.target.value);
+  };
+
+  const handleweatherValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setWeatherValue(event.target.value);
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event?.preventDefault();
     await handleNewDiary({
       date: dateInput.htmlFields.value,
-      visibility: visibilityInput.htmlFields.value,
-      weather: weatherInput.htmlFields.value,
+      visibility: visibilityValue,
+      weather: weatherValue,
       comment: commentInput.htmlFields.value
     });
     dateInput.reset(),
-    visibilityInput.reset(),
-    weatherInput.reset(),
     commentInput.reset();
   };
 
@@ -46,8 +53,24 @@ export const DiaryForm: React.FC<DiaryFormProps> = ({ handleNewDiary }) => {
     <div>
       <form onSubmit={handleSubmit}>
         <div>Date <input {...dateInput.htmlFields} /> </div>
-        <div>Visibility <input {...visibilityInput.htmlFields} /> </div>
-        <div>Weather <input {...weatherInput.htmlFields} /> </div>
+
+        <div onChange={handlevisibilityValueChange.bind(this)}>
+          Visibility 
+          <input type="radio" name="visibility" value="great" /> great 
+          <input type="radio" name="visibility" value="good" /> good 
+          <input type="radio" name="visibility" value="ok" /> ok
+          <input type="radio" name="visibility" value="poor" /> poor 
+        </div>
+
+        <div onChange={handleweatherValueChange.bind(this)}>
+          Visibility 
+          <input type="radio" name="weather" value="sunny" /> sunny 
+          <input type="radio" name="weather" value="rainy" /> rainy 
+          <input type="radio" name="weather" value="cloudy" /> cloudy 
+          <input type="radio" name="weather" value="stormy" /> stormy 
+          <input type="radio" name="weather" value="windy" /> windy 
+        </div>
+        
         <div>Comment <input {...commentInput.htmlFields} /> </div>
         <button type="submit">add</button>
       </form>
