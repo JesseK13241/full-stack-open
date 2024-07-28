@@ -24,8 +24,7 @@ const Notify = ({ errorMessage }: {errorMessage: string}) => {
 
 const styles = {
   notification: {
-    border: "1px solid red",
-    padding: "10 px"
+    color: "red",
   },
 };
 

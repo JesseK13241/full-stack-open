@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import { getAll, createNew } from "./services/diary";
 import { NewDiary, Diary } from "./types";
 import { DiaryEntry } from "./components/DiaryEntry";
@@ -7,7 +8,7 @@ import Notify from "./components/Notify";
 
 const App = () => {
   const [diaries, setDiaries] = useState<Diary[]>([]);
-  const [notificationMessage, setNotificationMessage] = useState("")
+  const [notificationMessage, setNotificationMessage] = useState("");
 
   useEffect(() => {
     const fetchDiaries = async () => {
@@ -23,15 +24,19 @@ const App = () => {
       setDiaries(diaries.concat(newDiary));
       setNotificationMessage("New diary entry added!");
     } catch (error) {
-      setNotificationMessage("Failed to add new diary entry.");
+      if (axios.isAxiosError(error) && error.response) {
+        setNotificationMessage(error.response.data);
+      } else {
+        console.error(error)
+      }
     }
-  }
+  };
 
   return (
     <div className="App">
       <h3>Add new entry</h3>
       <Notify errorMessage={notificationMessage} />
-      <DiaryForm handleNewDiary={handleNewDiary}/>
+      <DiaryForm handleNewDiary={handleNewDiary} />
       <h3>Diary entries</h3>
       {diaries.map(diary => (
         <DiaryEntry
