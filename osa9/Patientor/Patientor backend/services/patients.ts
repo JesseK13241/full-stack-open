@@ -21,7 +21,7 @@ export const getPatientsWithoutSSN = (): PatientWithoutSSN[] => {
 export const getPatientByID = (id: string): Patient | undefined => {
   const result = patients.find(patient => patient.id === id);
   if (result) {
-    return result as Patient;
+    return result;
   } else {
     return undefined;
   }
@@ -55,7 +55,7 @@ const validateNewPatientWithErrors = (data: unknown): ValidationResult => {
   };
 
   const isValidGender = (value: unknown): value is string => {
-    return isValidString(value) && Object.values(Gender).includes(value);
+    return isValidString(value) && Object.values(Gender).includes(value as Gender);
   };
 
   const isValidOccupation = (value: unknown): value is string => {

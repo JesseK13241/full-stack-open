@@ -12,7 +12,6 @@ router.get('/:id', (req, res) => {
   const id = req.params.id;
   const patient = getPatientByID(id);
   if (patient) {
-    patient.entries = [];
     res.json(patient);
   } else {
     res.status(400).send("Patient not found");
