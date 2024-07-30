@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text } from "react-native";
 
 /*  
 id: "django.django",
@@ -12,15 +12,15 @@ reviewCount: 5,
 ownerAvatarUrl: "https://avatars2.githubusercontent.com/u/27804?v=4"
  */
 
-const RepositoryItem = (item) => (
+const RepositoryItem = ({ item }) => (
   <View>
-    <Text>Full name: {item.item.fullName}</Text>
-    <Text>Description: {item.item.description}</Text>
-    <Text>Language: {item.item.language}</Text>
-    <Text>Stars: {item.item.stargazersCount}</Text>
-    <Text>Forks: {item.item.forksCount}</Text>
-    <Text>Reviews: {item.item.reviewCount}</Text>
-    <Text>Ratings: {item.item.ratingAverage}</Text>
+    <Text>Full name: {item.fullName}</Text>
+    <Text>Description: {item.description}</Text>
+    <Text>Language: {item.language}</Text>
+    <Text>Stars: {item.stargazersCount}</Text>
+    <Text>Forks: {item.forksCount}</Text>
+    <Text>Reviews: {item.reviewCount}</Text>
+    <Text>Ratings: {item.ratingAverage}</Text>
   </View>
 );
 
