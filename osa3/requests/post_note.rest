@@ -1,0 +1,7 @@
+POST https://render-test-h6qk.onrender.com/api/persons
+Content-Type: application/json
+
+{
+    "name": "lol",
+    "number": 12322343
+}
