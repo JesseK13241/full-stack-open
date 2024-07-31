@@ -3,8 +3,8 @@ import RepositoryItem from "./RepositoryItem";
 
 const styles = StyleSheet.create({
   separator: {
-    backgroundColor: "black",
-    height: 1
+    backgroundColor: "#e1e4e8",
+    height: 10
   }
 });
 
