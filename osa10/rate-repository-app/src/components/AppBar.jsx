@@ -8,14 +8,14 @@ import Text from "./Text";
 
 const styles = StyleSheet.create({
   appBar: {
-    paddingTop: 2 * Constants.statusBarHeight,
+    paddingTop: 2.5 * Constants.statusBarHeight,
     paddingLeft: 16,
     height: 4 * Constants.statusBarHeight,
     backgroundColor: theme.colors.textPrimary
   },
   heading: {
     color: "white",
-    fontSize: 25,
+    fontSize: 18,
     fontWeight: "bold",
     marginRight: 30
   }
