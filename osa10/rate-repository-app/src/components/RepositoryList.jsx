@@ -67,5 +67,5 @@ const RepositoryList = () => (
     keyExtractor={item => item.id}
   />
 );
-
+ 
 export default RepositoryList;
