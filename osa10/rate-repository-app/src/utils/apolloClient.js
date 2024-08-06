@@ -8,5 +8,4 @@ const createApolloClient = () => {
   });
 };
 
-
 export default createApolloClient;

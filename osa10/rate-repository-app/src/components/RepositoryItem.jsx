@@ -1,7 +1,7 @@
 import { Image, StyleSheet } from "react-native";
+import theme from "../theme";
 import Text from "./Text";
 import View from "./View";
-import theme from "../theme";
 
 const styles = StyleSheet.create({
   avatar: {
@@ -14,20 +14,8 @@ const styles = StyleSheet.create({
     borderRadius: theme.spacings.borderRadius,
     padding: 5,
     alignSelf: "flex-start"
-  },
+  }
 });
-
-/*  
-id: "django.django",
-fullName: "django/django",
-description: "The Web framework for perfectionists with deadlines.",
-language: "Python",
-forksCount: 21015,
-stargazersCount: 48496,
-ratingAverage: 73,
-reviewCount: 5,
-ownerAvatarUrl: "https://avatars2.githubusercontent.com/u/27804?v=4"
- */
 
 const formatNumber = numberString => {
   let number = parseInt(numberString);
@@ -52,7 +40,9 @@ const RepositoryItem = ({ item }) => (
         <Text style={styles.blueButton}>{item.language}</Text>
       </View>
     </View>
-    <View horizontal centered>
+    <View
+      horizontal
+      centered>
       <View>
         <Text bold>{formatNumber(item.stargazersCount)}</Text>
         <Text>Stars</Text>

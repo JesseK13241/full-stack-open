@@ -1,11 +1,10 @@
-// if a field has an error, the TextInput component sets the TextInput component's error prop as true. Use the value of the error prop to attach conditional border color to the TextInput component.
-
-import React from "react";
-import View from "./View";
-import { Text, TextInput, Button, StyleSheet } from "react-native";
 import { useFormik } from "formik";
-import theme from "../theme";
+import React from "react";
+import { Button, StyleSheet, Text, TextInput } from "react-native";
 import * as yup from "yup";
+import useSignIn from "../hooks/useSignIn";
+import theme from "../theme";
+import View from "./View";
 
 const styles = StyleSheet.create({
   input: {
@@ -33,13 +32,28 @@ const validationSchema = yup.object().shape({
 });
 
 const SignIn = () => {
+  const [signIn, result] = useSignIn();
+
+  const handleSubmit = async values => {
+    const { username, password } = values;
+
+    try {
+      const { data } = await signIn({ username, password });
+      console.log(data);
+      console.log(result);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const formik = useFormik({
     initialValues: { username: "", password: "" },
     validationSchema,
     onSubmit: values => {
-      console.log(values);
+      handleSubmit(values);
     }
   });
+
   return (
     <View container>
       <TextInput
