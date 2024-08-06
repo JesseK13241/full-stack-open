@@ -9,7 +9,7 @@ const useRepositories = () => {
   });
 
   return { 
-    repositories: data.repositories,
+    data,
     loading,
     error
   };

@@ -14,14 +14,15 @@ const ItemSeparator = () => <View style={styles.separator} />;
 const renderItem = ({ item }) => <RepositoryItem item={item} />;
 
 const RepositoryList = () => {
-  const { repositories, loading, error } = useRepositories();
+  const { data, loading, error } = useRepositories();
 
   if (loading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error.message}</Text>;
 
-  const repositoryNodes = repositories
-    ? repositories.edges.map(edge => edge.node)
+  const repositoryNodes = data
+    ? data.repositories.edges.map(edge => edge.node)
     : [];
+
   return (
     <FlatList
       data={repositoryNodes}
