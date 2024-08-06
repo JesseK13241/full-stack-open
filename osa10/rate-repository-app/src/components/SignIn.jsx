@@ -1,6 +1,7 @@
 import { useFormik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import { Button, StyleSheet, Text, TextInput } from "react-native";
+import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import useSignIn from "../hooks/useSignIn";
 import theme from "../theme";
@@ -23,6 +24,10 @@ const styles = StyleSheet.create({
   },
   signInButton: {
     marginTop: 10
+  },
+  errorText: {
+    color: "red",
+    marginTop: 10
   }
 });
 
@@ -32,25 +37,22 @@ const validationSchema = yup.object().shape({
 });
 
 const SignIn = () => {
-  const [signIn, result] = useSignIn();
-
-  const handleSubmit = async values => {
-    const { username, password } = values;
-
-    try {
-      const { data } = await signIn({ username, password });
-      console.log(data);
-      console.log(result);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  const [signIn] = useSignIn();
+  const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
   const formik = useFormik({
     initialValues: { username: "", password: "" },
     validationSchema,
-    onSubmit: values => {
-      handleSubmit(values);
+    onSubmit: async values => {
+      try {
+        const { data } = await signIn(values);
+        console.log(data);
+        navigate("/");
+      } catch (e) {
+        console.log(e);
+        setError("Invalid username or password");
+      }
     }
   });
 
@@ -88,6 +90,8 @@ const SignIn = () => {
       {formik.touched.password && formik.errors.password && (
         <Text style={{ color: "red" }}>{formik.errors.password}</Text>
       )}
+
+      {error && <Text style={styles.errorText}>{error}</Text>}
 
       <View style={styles.signInButton}>
         <Button
