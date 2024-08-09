@@ -36,24 +36,13 @@ const validationSchema = yup.object().shape({
   password: yup.string().required("Password is required")
 });
 
-const SignIn = () => {
-  const [signIn] = useSignIn();
-  const navigate = useNavigate();
-  const [error, setError] = useState(null);
-
+export const SignInContainer = ({ onSubmit }) => {
   const formik = useFormik({
-    initialValues: { username: "", password: "" },
+    initialValues: { username: '', password: '' },
     validationSchema,
-    onSubmit: async values => {
-      try {
-        const { data } = await signIn(values);
-        console.log(data);
-        navigate("/");
-      } catch (e) {
-        console.log(e);
-        setError("Invalid username or password");
-      }
-    }
+    onSubmit: (values) => {
+      onSubmit(values);
+    },
   });
 
   return (
@@ -63,43 +52,56 @@ const SignIn = () => {
           styles.input,
           formik.touched.username && formik.errors.username
             ? styles.inputError
-            : styles.inputNormal
+            : styles.inputNormal,
         ]}
         placeholder="Username"
-        onChangeText={formik.handleChange("username")}
+        onChangeText={formik.handleChange('username')}
         value={formik.values.username}
       />
-
       {formik.touched.username && formik.errors.username && (
-        <Text style={{ color: "red" }}>{formik.errors.username}</Text>
+        <Text style={{ color: 'red' }}>{formik.errors.username}</Text>
       )}
-
       <TextInput
         style={[
           styles.input,
           formik.touched.password && formik.errors.password
             ? styles.inputError
-            : styles.inputNormal
+            : styles.inputNormal,
         ]}
         placeholder="Password"
-        onChangeText={formik.handleChange("password")}
+        onChangeText={formik.handleChange('password')}
         value={formik.values.password}
         secureTextEntry
       />
-
       {formik.touched.password && formik.errors.password && (
-        <Text style={{ color: "red" }}>{formik.errors.password}</Text>
+        <Text style={{ color: 'red' }}>{formik.errors.password}</Text>
       )}
-
-      {error && <Text style={styles.errorText}>{error}</Text>}
-
       <View style={styles.signInButton}>
-        <Button
-          onPress={formik.handleSubmit}
-          title="Sign in"
-        />
+        <Button onPress={formik.handleSubmit} title="Sign in" />
       </View>
     </View>
+  );
+};
+
+const SignIn = () => {
+  const [signIn] = useSignIn();
+  const navigate = useNavigate();
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (values) => {
+    try {
+      await signIn(values);
+      navigate('/');
+    } catch (e) {
+      setError('Invalid username or password');
+    }
+  };
+
+  return (
+    <>
+      <SignInContainer onSubmit={handleSubmit} />
+      {error && <Text style={styles.errorText}>{error}</Text>}
+    </>
   );
 };
 
