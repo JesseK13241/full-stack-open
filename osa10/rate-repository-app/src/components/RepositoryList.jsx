@@ -13,14 +13,9 @@ const ItemSeparator = () => <View style={styles.separator} />;
 
 const renderItem = ({ item }) => <RepositoryItem item={item} />;
 
-const RepositoryList = () => {
-  const { data, loading, error } = useRepositories();
-
-  if (loading) return <Text>Loading...</Text>;
-  if (error) return <Text>Error: {error.message}</Text>;
-
-  const repositoryNodes = data
-    ? data.repositories.edges.map(edge => edge.node)
+export const RepositoryListContainer = ({ repositories }) => {
+  const repositoryNodes = repositories
+    ? repositories.edges.map(edge => edge.node)
     : [];
 
   return (
@@ -31,6 +26,15 @@ const RepositoryList = () => {
       keyExtractor={item => item.id}
     />
   );
+};
+
+const RepositoryList = () => {
+  const { data, loading, error } = useRepositories();
+
+  if (loading) return <Text>Loading...</Text>;
+  if (error) return <Text>Error: {error.message}</Text>;
+  
+  return <RepositoryListContainer repositories={data.repositories} />;
 };
 
 export default RepositoryList;

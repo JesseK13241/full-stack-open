@@ -26,7 +26,7 @@ const formatNumber = numberString => {
 };
 
 const RepositoryItem = ({ item }) => (
-  <View container>
+  <View testID="repositoryItem" container>
     <View horizontal>
       <Image
         style={[styles.avatar, { flex: 0.25 }]}
