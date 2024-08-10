@@ -1,27 +1,13 @@
 import { useFormik } from "formik";
 import React, { useState } from "react";
-import { Button, StyleSheet, Text, TextInput } from "react-native";
+import { Button, StyleSheet, Text } from "react-native";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import useSignIn from "../hooks/useSignIn";
-import theme from "../theme";
+import FormikInput from "./FormikInput";
 import View from "./View";
 
 const styles = StyleSheet.create({
-  input: {
-    width: "auto",
-    height: 70,
-    color: theme.colors.textSecondary,
-    borderWidth: 1,
-    padding: 20,
-    marginTop: 10
-  },
-  inputError: {
-    borderColor: "red"
-  },
-  inputNormal: {
-    borderColor: theme.colors.textSecondary
-  },
   signInButton: {
     marginTop: 10
   },
@@ -38,46 +24,32 @@ const validationSchema = yup.object().shape({
 
 export const SignInContainer = ({ onSubmit }) => {
   const formik = useFormik({
-    initialValues: { username: '', password: '' },
+    initialValues: { username: "", password: "" },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: values => {
       onSubmit(values);
-    },
+    }
   });
 
   return (
     <View container>
-      <TextInput
-        style={[
-          styles.input,
-          formik.touched.username && formik.errors.username
-            ? styles.inputError
-            : styles.inputNormal,
-        ]}
+      <FormikInput
+        fieldName="username"
         placeholder="Username"
-        onChangeText={formik.handleChange('username')}
-        value={formik.values.username}
+        formik={formik}
       />
-      {formik.touched.username && formik.errors.username && (
-        <Text style={{ color: 'red' }}>{formik.errors.username}</Text>
-      )}
-      <TextInput
-        style={[
-          styles.input,
-          formik.touched.password && formik.errors.password
-            ? styles.inputError
-            : styles.inputNormal,
-        ]}
+
+      <FormikInput
+        fieldName="password"
         placeholder="Password"
-        onChangeText={formik.handleChange('password')}
-        value={formik.values.password}
-        secureTextEntry
+        formik={formik}
       />
-      {formik.touched.password && formik.errors.password && (
-        <Text style={{ color: 'red' }}>{formik.errors.password}</Text>
-      )}
+
       <View style={styles.signInButton}>
-        <Button onPress={formik.handleSubmit} title="Sign in" />
+        <Button
+          onPress={formik.handleSubmit}
+          title="Sign in"
+        />
       </View>
     </View>
   );
@@ -88,12 +60,12 @@ const SignIn = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async values => {
     try {
       await signIn(values);
-      navigate('/');
+      navigate("/");
     } catch (e) {
-      setError('Invalid username or password');
+      setError("Invalid username or password");
     }
   };
 

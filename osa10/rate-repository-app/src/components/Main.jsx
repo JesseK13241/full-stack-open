@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-native";
 import AppBar from "./AppBar";
 import RepositoryDetail from "./RepositoryDetail";
 import RepositoryList from "./RepositoryList";
+import ReviewForm from "./ReviewForm";
 import SignIn from "./SignIn";
 
 const Main = () => {
@@ -12,6 +13,10 @@ const Main = () => {
         <Route
           path="/"
           element={<RepositoryList />}
+        />
+        <Route
+          path="/create-review"
+          element={<ReviewForm />}
         />
         <Route
           path="/sign-in"

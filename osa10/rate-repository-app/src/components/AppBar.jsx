@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     color: "white",
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     marginRight: 30
   }
@@ -52,9 +52,14 @@ const AppBar = () => {
             <Text style={styles.heading}>Repositories</Text>
           </Link>
         </Pressable>
+        <Pressable>
+          <Link to="/create-review">
+            <Text style={styles.heading}>Create a review</Text>
+          </Link>
+        </Pressable>
         {username ? (
           <Pressable onPress={signOut}>
-            <Text style={styles.heading}>Sign out ({username})</Text>
+            <Text style={styles.heading}>Sign out</Text>
           </Pressable>
         ) : (
           <Pressable>
