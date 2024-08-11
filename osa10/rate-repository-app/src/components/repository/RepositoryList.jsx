@@ -1,3 +1,5 @@
+import { Picker } from "@react-native-picker/picker";
+import { useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useNavigate } from "react-router-dom";
 import useRepositories from "../../hooks/useRepositories";
@@ -37,8 +39,10 @@ const RepositoryListContainer = ({ repositories, onPressItem }) => {
 };
 
 const RepositoryList = () => {
+  const [selectedSorting, setSelectedSorting] = useState("la");
+
   const navigate = useNavigate();
-  const { data, loading, error } = useRepositories();
+  const { data, loading, error } = useRepositories(selectedSorting);
 
   const handlePress = id => {
     console.log("Navigating to", id);
@@ -49,10 +53,30 @@ const RepositoryList = () => {
   if (error) return <Text>Error: {error.message}</Text>;
 
   return (
-    <RepositoryListContainer
-      repositories={data.repositories}
-      onPressItem={handlePress}
-    />
+    <>
+      <Picker
+        selectedValue={selectedSorting}
+        // eslint-disable-next-line no-unused-vars
+        onValueChange={(itemValue, _itemIndex) => setSelectedSorting(itemValue)}>
+        <Picker.Item
+          label="Latest repositories"
+          value="la"
+        />
+        <Picker.Item
+          label="Highest rated repositories"
+          value="hi"
+        />
+        <Picker.Item
+          label="Lowest rated repositories"
+          value="lo"
+        />
+      </Picker>
+      <ItemSeparator />
+      <RepositoryListContainer
+        repositories={data.repositories}
+        onPressItem={handlePress}
+      />
+    </>
   );
 };
 
