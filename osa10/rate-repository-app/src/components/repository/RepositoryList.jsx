@@ -29,7 +29,7 @@ const RepositoryListHeader = ({
   setSelectedSorting
 }) => {
   return (
-    <View style={{backgroundColor: theme.colors.background}}>
+    <View style={{ backgroundColor: theme.colors.background }}>
       <Searchbar
         placeholder="Search"
         style={styles.search}
@@ -82,7 +82,7 @@ class RepositoryListContainer extends React.Component {
   );
 
   render() {
-    const { repositories } = this.props;
+    const { repositories, onEndReach } = this.props;
     const repositoryNodes = repositories
       ? repositories.edges.map(edge => edge.node)
       : [];
@@ -94,6 +94,7 @@ class RepositoryListContainer extends React.Component {
         renderItem={this.renderItem}
         keyExtractor={item => item.id}
         ListHeaderComponent={this.renderHeader}
+        onEndReached={onEndReach}
       />
     );
   }
@@ -107,11 +108,16 @@ const RepositoryList = () => {
   const navigate = useNavigate();
 
   const [orderBy, orderDirection] = selectedSorting.split(":");
-  const { repositories, loading, error } = useRepositories({
+  const { repositories, loading, error, fetchMore } = useRepositories({
     orderBy,
     orderDirection,
-    searchKeyword: debouncedSearchQuery
+    searchKeyword: debouncedSearchQuery,
+    first: 8
   });
+
+  const onEndReach = () => {
+    fetchMore();
+  };
 
   const handlePress = id => {
     console.log("Navigating to", id);
@@ -129,6 +135,7 @@ const RepositoryList = () => {
       setSearchQuery={setSearchQuery}
       selectedSorting={selectedSorting}
       setSelectedSorting={setSelectedSorting}
+      onEndReach={onEndReach}
     />
   );
 };
