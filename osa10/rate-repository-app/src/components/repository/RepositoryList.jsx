@@ -29,7 +29,7 @@ const RepositoryListHeader = ({
   setSelectedSorting
 }) => {
   return (
-    <View>
+    <View style={{backgroundColor: theme.colors.background}}>
       <Searchbar
         placeholder="Search"
         style={styles.search}
