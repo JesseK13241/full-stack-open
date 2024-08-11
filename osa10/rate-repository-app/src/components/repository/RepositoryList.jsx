@@ -1,26 +1,79 @@
 import { Picker } from "@react-native-picker/picker";
-import { useState } from "react";
+import React, { useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { Searchbar } from "react-native-paper";
 import { useNavigate } from "react-router-dom";
+import { useDebounce } from "use-debounce";
 import useRepositories from "../../hooks/useRepositories";
+import globalStyles from "../../styles";
+import theme from "../../theme";
+
 import RepositoryItem from "./RepositoryItem";
 
 const styles = StyleSheet.create({
-  separator: {
-    backgroundColor: "#e1e4e8",
-    height: 10
+  search: {
+    backgroundColor: "white",
+    borderColor: theme.colors.background,
+    borderWidth: 3,
+    borderRadius: 10,
+    margin: 10
   }
 });
 
-const ItemSeparator = () => <View style={styles.separator} />;
+const ItemSeparator = () => <View style={globalStyles.separator} />;
 
-const RepositoryListContainer = ({ repositories, onPressItem }) => {
-  const repositoryNodes = repositories
-    ? repositories.edges.map(edge => edge.node)
-    : [];
+const RepositoryListHeader = ({
+  searchQuery,
+  setSearchQuery,
+  selectedSorting,
+  setSelectedSorting
+}) => {
+  return (
+    <View>
+      <Searchbar
+        placeholder="Search"
+        style={styles.search}
+        onChangeText={setSearchQuery}
+        value={searchQuery}
+      />
+      <Picker
+        style={styles.picker}
+        selectedValue={selectedSorting}
+        onValueChange={itemValue => setSelectedSorting(itemValue)}>
+        <Picker.Item
+          label="Latest repositories"
+          value="CREATED_AT:DESC"
+        />
+        <Picker.Item
+          label="Highest rated repositories"
+          value="RATING_AVERAGE:DESC"
+        />
+        <Picker.Item
+          label="Lowest rated repositories"
+          value="RATING_AVERAGE:ASC"
+        />
+      </Picker>
+    </View>
+  );
+};
 
-  const renderItem = ({ item }) => (
-    <Pressable onPress={() => onPressItem(item.id)}>
+class RepositoryListContainer extends React.Component {
+  renderHeader = () => {
+    const { searchQuery, setSearchQuery, selectedSorting, setSelectedSorting } =
+      this.props;
+
+    return (
+      <RepositoryListHeader
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        selectedSorting={selectedSorting}
+        setSelectedSorting={setSelectedSorting}
+      />
+    );
+  };
+
+  renderItem = ({ item }) => (
+    <Pressable onPress={() => this.props.onPressItem(item.id)}>
       <RepositoryItem
         item={item}
         hideLink={true}
@@ -28,21 +81,37 @@ const RepositoryListContainer = ({ repositories, onPressItem }) => {
     </Pressable>
   );
 
-  return (
-    <FlatList
-      data={repositoryNodes}
-      ItemSeparatorComponent={ItemSeparator}
-      renderItem={renderItem}
-      keyExtractor={item => item.id}
-    />
-  );
-};
+  render() {
+    const { repositories } = this.props;
+    const repositoryNodes = repositories
+      ? repositories.edges.map(edge => edge.node)
+      : [];
+
+    return (
+      <FlatList
+        data={repositoryNodes}
+        ItemSeparatorComponent={ItemSeparator}
+        renderItem={this.renderItem}
+        keyExtractor={item => item.id}
+        ListHeaderComponent={this.renderHeader}
+      />
+    );
+  }
+}
 
 const RepositoryList = () => {
-  const [selectedSorting, setSelectedSorting] = useState("la");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedSorting, setSelectedSorting] = useState("CREATED_AT:DESC");
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
   const navigate = useNavigate();
-  const { data, loading, error } = useRepositories(selectedSorting);
+
+  const [orderBy, orderDirection] = selectedSorting.split(":");
+  const { repositories, loading, error } = useRepositories({
+    orderBy,
+    orderDirection,
+    searchKeyword: debouncedSearchQuery
+  });
 
   const handlePress = id => {
     console.log("Navigating to", id);
@@ -53,30 +122,14 @@ const RepositoryList = () => {
   if (error) return <Text>Error: {error.message}</Text>;
 
   return (
-    <>
-      <Picker
-        selectedValue={selectedSorting}
-        // eslint-disable-next-line no-unused-vars
-        onValueChange={(itemValue, _itemIndex) => setSelectedSorting(itemValue)}>
-        <Picker.Item
-          label="Latest repositories"
-          value="la"
-        />
-        <Picker.Item
-          label="Highest rated repositories"
-          value="hi"
-        />
-        <Picker.Item
-          label="Lowest rated repositories"
-          value="lo"
-        />
-      </Picker>
-      <ItemSeparator />
-      <RepositoryListContainer
-        repositories={data.repositories}
-        onPressItem={handlePress}
-      />
-    </>
+    <RepositoryListContainer
+      repositories={repositories}
+      onPressItem={handlePress}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
+      selectedSorting={selectedSorting}
+      setSelectedSorting={setSelectedSorting}
+    />
   );
 };
 

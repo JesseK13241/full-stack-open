@@ -1,35 +1,17 @@
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList } from "react-native";
 import { useParams } from "react-router-dom";
 import useRepository from "../../hooks/useRepository";
-import theme from "../../theme";
+import globalStyles from "../../styles";
 import Text from "../common/Text";
 import View from "../common/View";
 import RepositoryItem from "./RepositoryItem";
 
-const styles = StyleSheet.create({
-  separator: {
-    backgroundColor: "#e1e4e8",
-    height: 10
-  },
-  rating: {
-    borderColor: theme.colors.primary,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 2,
-    alignItems: "center",
-    paddingTop: 8
-  },
-  reviewText: {
-    paddingTop: 10,
-    paddingRight: 50
-  }
-});
-
 const ReviewItem = ({ review }) => {
   return (
-    <View container horizontal>
-      <View style={styles.rating}>
+    <View
+      container
+      horizontal>
+      <View style={globalStyles.ratingCircle}>
         <Text>{review.rating}</Text>
       </View>
       <View>
@@ -39,7 +21,7 @@ const ReviewItem = ({ review }) => {
         <View>
           <Text>{review.createdAt.split("T")[0]}</Text>
         </View>
-        <View style={styles.reviewText}>
+        <View style={globalStyles.reviewText}>
           <Text>{review.text}</Text>
         </View>
       </View>
@@ -47,7 +29,7 @@ const ReviewItem = ({ review }) => {
   );
 };
 
-const ItemSeparator = () => <View style={styles.separator} />;
+const ItemSeparator = () => <View style={globalStyles.separator} />;
 
 const RepositoryDetail = () => {
   const { id } = useParams();

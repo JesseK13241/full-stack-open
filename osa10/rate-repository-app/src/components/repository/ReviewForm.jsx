@@ -1,21 +1,13 @@
 import { useFormik } from "formik";
 import React, { useState } from "react";
-import { Button, StyleSheet, Text } from "react-native";
+import { Pressable, Text } from "react-native";
 import { useNavigate } from "react-router-native";
 import * as yup from "yup";
 import useCreateReview from "../../hooks/useCreateReview";
 import FormikInput from "../common/FormikInput";
 import View from "../common/View";
 
-const styles = StyleSheet.create({
-  submitButton: {
-    marginTop: 10
-  },
-  errorText: {
-    color: "red",
-    marginTop: 10
-  }
-});
+import globalStyles from "../../styles";
 
 const validationSchema = yup.object().shape({
   ownerName: yup.string().required("Repository owner name is required"),
@@ -42,7 +34,7 @@ const FormContainer = ({ onSubmit }) => {
   });
 
   return (
-    <View>
+    <View container>
       <FormikInput
         fieldName="ownerName"
         placeholder="Repository owner name"
@@ -65,12 +57,11 @@ const FormContainer = ({ onSubmit }) => {
         formik={formik}
         multiline={true}
       />
-      <View style={styles.submitButton}>
-        <Button
-          onPress={formik.handleSubmit}
-          title="Create a review"
-        />
-      </View>
+      <Pressable
+        style={[globalStyles.button, globalStyles.centeredButton]}
+        onPress={formik.handleSubmit}>
+        <Text style={globalStyles.buttonText}>Create a review</Text>
+      </Pressable>
     </View>
   );
 };
@@ -93,7 +84,7 @@ const ReviewForm = () => {
   return (
     <>
       <FormContainer onSubmit={handleSubmit} />
-      {error && <Text style={styles.errorText}>{error}</Text>}
+      {error && <Text style={globalStyles.errorText}>{error}</Text>}
     </>
   );
 };

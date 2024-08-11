@@ -1,32 +1,22 @@
-import { StyleSheet, Text, TextInput } from "react-native";
-import theme from "../../theme";
+import { Text, TextInput } from "react-native";
 
-const styles = StyleSheet.create({
-  input: {
-    width: "auto",
-    height: 70,
-    color: theme.colors.textSecondary,
-    borderWidth: 1,
-    padding: 20,
-    marginTop: 10
-  },
-  inputError: {
-    borderColor: "red"
-  },
-  inputNormal: {
-    borderColor: theme.colors.textSecondary
-  }
-});
+import globalStyles from "../../styles";
 
-const FormikInput = ({ fieldName, placeholder, formik, multiline = false, secureTextEntry = false }) => {
+const FormikInput = ({
+  fieldName,
+  placeholder,
+  formik,
+  multiline = false,
+  secureTextEntry = false
+}) => {
   return (
     <>
       <TextInput
         style={[
-          styles.input,
+          globalStyles.input,
           formik.touched[fieldName] && formik.errors[fieldName]
-            ? styles.inputError
-            : styles.inputNormal,
+            ? { borderColor: "red" }
+            : {}
         ]}
         placeholder={placeholder}
         onChangeText={formik.handleChange(fieldName)}
@@ -35,7 +25,7 @@ const FormikInput = ({ fieldName, placeholder, formik, multiline = false, secure
         secureTextEntry={secureTextEntry}
       />
       {formik.touched[fieldName] && formik.errors[fieldName] && (
-        <Text style={{ color: 'red' }}>{formik.errors[fieldName]}</Text>
+        <Text style={{ color: "red" }}>{formik.errors[fieldName]}</Text>
       )}
     </>
   );
