@@ -1,6 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import Constants from "expo-constants";
 import { Pressable, ScrollView, StyleSheet } from "react-native";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-native";
 import { ME } from "../graphql/queries";
 import useAuthStorage from "../hooks/useAuthStorage";
@@ -27,6 +28,7 @@ const AppBar = () => {
   const { data, loading, error } = useQuery(ME);
   const authStorage = useAuthStorage();
   const apolloClient = useApolloClient();
+  const navigate = useNavigate();
 
   if (loading) {
     return null;
@@ -42,6 +44,7 @@ const AppBar = () => {
   const signOut = async () => {
     await authStorage.removeAccessToken();
     apolloClient.resetStore();
+    navigate("/");
   };
 
   return (
@@ -57,6 +60,11 @@ const AppBar = () => {
             <Pressable>
               <Link to="/create-review">
                 <Text style={styles.heading}>Create a review</Text>
+              </Link>
+            </Pressable>
+            <Pressable>
+              <Link to="/my-reviews">
+                <Text style={styles.heading}>My reviews</Text>
               </Link>
             </Pressable>
             <Pressable onPress={signOut}>
