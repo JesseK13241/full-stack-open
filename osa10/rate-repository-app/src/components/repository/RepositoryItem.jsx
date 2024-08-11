@@ -1,7 +1,7 @@
 import { Image, Pressable, StyleSheet } from "react-native";
-import theme from "../theme";
-import Text from "./Text";
-import View from "./View";
+import theme from "../../theme";
+import Text from "../common/Text";
+import View from "../common/View";
 
 import * as Linking from "expo-linking";
 

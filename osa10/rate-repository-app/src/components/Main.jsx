@@ -1,9 +1,10 @@
 import { Navigate, Route, Routes } from "react-router-native";
 import AppBar from "./AppBar";
-import RepositoryDetail from "./RepositoryDetail";
-import RepositoryList from "./RepositoryList";
-import ReviewForm from "./ReviewForm";
-import SignIn from "./SignIn";
+import SignIn from "./auth/SignIn";
+import SignUp from "./auth/SignUp";
+import RepositoryDetail from "./repository/RepositoryDetail";
+import RepositoryList from "./repository/RepositoryList";
+import ReviewForm from "./repository/ReviewForm";
 
 const Main = () => {
   return (
@@ -21,6 +22,10 @@ const Main = () => {
         <Route
           path="/sign-in"
           element={<SignIn />}
+        />
+        <Route
+          path="/sign-up"
+          element={<SignUp />}
         />
         <Route
           path="/repository/:id"

@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import { Button, StyleSheet, Text } from "react-native";
 import { useNavigate } from "react-router-native";
 import * as yup from "yup";
-import useCreateReview from "../hooks/useCreateReview";
-import FormikInput from "./FormikInput";
-import View from "./View";
+import useCreateReview from "../../hooks/useCreateReview";
+import FormikInput from "../common/FormikInput";
+import View from "../common/View";
 
 const styles = StyleSheet.create({
   submitButton: {

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TextInput } from "react-native";
-import theme from "../theme";
+import theme from "../../theme";
 
 const styles = StyleSheet.create({
   input: {
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const FormikInput = ({ fieldName, placeholder, formik, multiline = false }) => {
+const FormikInput = ({ fieldName, placeholder, formik, multiline = false, secureTextEntry = false }) => {
   return (
     <>
       <TextInput
@@ -32,6 +32,7 @@ const FormikInput = ({ fieldName, placeholder, formik, multiline = false }) => {
         onChangeText={formik.handleChange(fieldName)}
         value={formik.values[fieldName]}
         multiline={multiline}
+        secureTextEntry={secureTextEntry}
       />
       {formik.touched[fieldName] && formik.errors[fieldName] && (
         <Text style={{ color: 'red' }}>{formik.errors[fieldName]}</Text>

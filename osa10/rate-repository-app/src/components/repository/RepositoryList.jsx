@@ -1,6 +1,6 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useNavigate } from "react-router-dom";
-import useRepositories from "../hooks/useRepositories";
+import useRepositories from "../../hooks/useRepositories";
 import RepositoryItem from "./RepositoryItem";
 
 const styles = StyleSheet.create({

@@ -1,10 +1,10 @@
 import { FlatList, StyleSheet } from "react-native";
 import { useParams } from "react-router-dom";
-import useRepository from "../hooks/useRepository";
-import theme from "../theme";
+import useRepository from "../../hooks/useRepository";
+import theme from "../../theme";
+import Text from "../common/Text";
+import View from "../common/View";
 import RepositoryItem from "./RepositoryItem";
-import Text from "./Text";
-import View from "./View";
 
 const styles = StyleSheet.create({
   separator: {

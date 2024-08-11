@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import { Button, StyleSheet, Text } from "react-native";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import useSignIn from "../hooks/useSignIn";
-import FormikInput from "./FormikInput";
-import View from "./View";
+import useSignIn from "../../hooks/useSignIn";
+import FormikInput from "../common/FormikInput";
+import View from "../common/View";
 
 const styles = StyleSheet.create({
   signInButton: {
@@ -43,6 +43,7 @@ export const SignInContainer = ({ onSubmit }) => {
         fieldName="password"
         placeholder="Password"
         formik={formik}
+        secureTextEntry={true}
       />
 
       <View style={styles.signInButton}>
