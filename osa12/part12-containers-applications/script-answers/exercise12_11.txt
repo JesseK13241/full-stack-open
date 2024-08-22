@@ -1,0 +1,3 @@
+docker exec -it todo-backend-redis-1 redis-cli
+KEYS *
+GET visit_count
