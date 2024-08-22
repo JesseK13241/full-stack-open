@@ -1,3 +1,5 @@
 docker exec -it todo-backend-redis-1 redis-cli
 KEYS *
 GET visit_count
+SET visit_count 9001
+DEL visit_count
