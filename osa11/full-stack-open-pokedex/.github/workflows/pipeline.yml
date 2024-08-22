@@ -1,0 +1,129 @@
+name: Deployment pipeline
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+   
+jobs:
+  setup_pipeline:
+    runs-on: ubuntu-20.04
+    if: ${{ github.event_name == 'push' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install
+      - name: Check style
+        run: npm run eslint
+      - name: Build
+        run: npm run build
+      - name: Notify build failure
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" \
+          -d '{
+            "embeds": [{
+              "title": "Build failed",
+              "color": 16711680,
+              "fields": [
+                {
+                  "name": "Author",
+                  "value": "'"${{ github.event.head_commit.committer.name }}"'",
+                  "inline": true
+                },
+                {
+                  "name": "Commit Message",
+                  "value": "'"${{ github.event.head_commit.message }}"'",
+                  "inline": false
+                },
+                {
+                  "name": "Commit",
+                  "value": "'"${{ github.sha }}"'",
+                  "inline": true
+                }
+              ]
+            }]
+          }' \
+          $DISCORD_WEBHOOK
+          
+  jest_testing:
+    needs: [setup_pipeline]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install
+      - name: Jest test
+        run: npm test
+
+  playwright_testing:
+    needs: [jest_testing]
+    timeout-minutes: 60
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20
+    - name: Install dependencies
+      run: npm ci
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+    - name: Run Playwright tests
+      run: npx playwright test
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
+
+  render_deploy:
+    needs: [playwright_testing]
+    runs-on: ubuntu-20.04
+    if: ${{ !contains(join(github.event.commits.*.message, ' '), '#skip') }}
+    steps:
+      - name: Trigger deployment
+        run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
+      - name: Notify deployment success
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+          -d '{
+            "embeds": [{
+              "title": "New deployment",
+              "color": 65280,
+              "fields": [
+                {
+                  "name": "URL",
+                  "value": "https://dashboard.render.com/web/srv-cr0pnfjtq21c73cjnf8g",
+                  "inline": true
+                }
+              ]
+            }]
+          }' \
+          $DISCORD_WEBHOOK
+
+  tag_release:
+    needs: [render_deploy]
+    runs-on: ubuntu-20.04
+    if: ${{ !contains(join(github.event.commits.*.message, ' '), '#skip') }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Github Tag Bump
+        uses: anothrNick/github-tag-action@1.70.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          DEFAULT_BUMP: patch

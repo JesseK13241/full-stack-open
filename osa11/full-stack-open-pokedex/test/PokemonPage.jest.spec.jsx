@@ -1,8 +1,8 @@
-import React from 'react'
+import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import axiosMock from 'axios'
+import React from 'react'
 import { act } from 'react-dom/test-utils'
-import '@testing-library/jest-dom'
 import PokemonPage from '../src/PokemonPage'
 
 import { MemoryRouter } from 'react-router-dom'
@@ -130,5 +130,5 @@ describe('<PokemonPage />', () => {
 
     expect(screen.queryByText('Previous')).toBeNull()
     expect(screen.queryByText('Next')).toBeNull()
-  })  
+  })
 })
