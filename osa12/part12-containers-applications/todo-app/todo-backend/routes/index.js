@@ -3,6 +3,8 @@ const router = express.Router();
 const redis = require("../redis");
 const configs = require("../util/config");
 
+const VISITS_KEY = "visit_count";
+
 router.get("/", async (req, res) => {
   res.send({
     ...configs,
