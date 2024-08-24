@@ -8,5 +8,14 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: './testSetup.js', 
-  }
+  },
+  server: {
+    host: '0.0.0.0', 
+    port: 5173, 
+    hmr: {
+      protocol: 'ws', 
+      host: 'localhost',
+      port: 5173, 
+    },
+  },
 })
