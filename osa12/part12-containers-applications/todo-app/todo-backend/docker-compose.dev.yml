@@ -1,16 +1,4 @@
-version: '3.8'
-
 services:
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      - DOCKER_ENVIRONMENT=true
-      - REDIS_URL=redis://redis:6379
-    depends_on:
-      - mongo
-      - redis
 
   mongo:
     image: mongo
@@ -30,3 +18,20 @@ services:
     command: ['redis-server', '--appendonly', 'yes'] 
     volumes: 
       - ./redis_data:/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm run dev
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - 3000:3000
+    environment:
+      - DEBUG=playground:*
+      - REDIS_URL=redis://redis:6379
+      - MONGO_URL=mongodb://the_username:the_password@mongo:27017/the_database
+    depends_on:
+      - mongo
+      - redis
