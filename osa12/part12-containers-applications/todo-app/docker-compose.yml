@@ -1,9 +1,9 @@
 services:
   frontend:
-    image: todo-frontend-dev
+    image: todo-frontend
     build:
       context: ./todo-frontend
-      dockerfile: dev.Dockerfile
+      dockerfile: Dockerfile
     volumes:
       - ./todo-frontend:/usr/src/frontend
     environment:
@@ -11,7 +11,7 @@ services:
       - WDS_SOCKET_HOST=127.0.0.1
       - WATCHPACK_POLLING=true
       - VITE_BACKEND_URL=http://localhost:8080/api
-    container_name: todo-frontend-dev
+    container_name: todo-frontend
 
   backend:
     build:
@@ -46,7 +46,7 @@ services:
   nginx:
     image: nginx:1.25-alpine
     volumes:
-      - ./nginx.dev.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "8080:80"
     depends_on:
