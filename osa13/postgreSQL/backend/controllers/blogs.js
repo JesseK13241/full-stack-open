@@ -18,6 +18,7 @@ blogRouter.get("/", async (req, res) => {
 blogRouter.post("/", async (req, res) => {
   try {
     console.log("Creating blog", JSON.stringify(req.body));
+    req.body.likes = 0;
     const blog = await Blog.create(req.body);
     console.log("Created blog", JSON.stringify(blog));
     return res.json(blog);
@@ -37,8 +38,10 @@ blogRouter.get("/:id", blogFinder, async (req, res) => {
 
 blogRouter.put("/:id", blogFinder, async (req, res) => {
   if (req.blog) {
+    const newLikes = req.body.likes;
+    req.blog.likes = newLikes;
     await req.blog.save();
-    console.log("Updated blog", JSON.stringify(req.blog));
+    console.log("Updated blog likes", JSON.stringify(req.blog));
     res.json(req.blog);
   } else {
     res.status(404).end();
