@@ -8,30 +8,24 @@ const tokenExtractor = (req, res, next) => {
   const authorization = req.get("authorization");
   if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
     try {
-      console.log(authorization.substring(7));
       req.decodedToken = jwt.verify(authorization.substring(7), SECRET);
+      next();
     } catch (error) {
-      console.log(error);
-      return res.status(401).json({ error: "token invalid" });
+      next(error);
     }
   } else {
-    return res.status(401).json({ error: "token missing" });
+    next({ name: "JsonWebTokenError", message: "Token missing or invalid" });
   }
-  next();
 };
 
 blogRouter.post("/", tokenExtractor, async (req, res) => {
-  try {
-    const user = await User.findByPk(req.decodedToken.id);
-    const blog = await Blog.create({
-      ...req.body,
-      userId: user.id,
-      date: new Date()
-    });
-    res.json(blog);
-  } catch (error) {
-    return res.status(400).json({ error });
-  }
+  const user = await User.findByPk(req.decodedToken.id);
+  const blog = await Blog.create({
+    ...req.body,
+    userId: user.id,
+    date: new Date()
+  });
+  res.json(blog);
 });
 
 const blogFinder = async (req, res, next) => {
@@ -54,19 +48,12 @@ blogRouter.get("/", async (req, res) => {
   res.json(blogs);
 });
 
-blogRouter.post("/", async (req, res) => {
-  const user = await User.findOne();
-  const blog = await Blog.create({ ...req.body, userId: user.id });
-  return res.json(blog); // likes: null ??
-});
-
 blogRouter.get("/:id", blogFinder, async (req, res) => {
   res.json(req.blog);
 });
 
 blogRouter.put("/:id", blogFinder, async (req, res) => {
-  req.blog.likes = req.body.likes;
-  await req.blog.save();
+  await req.blog.update({ likes: req.body.likes });
   res.json(req.blog);
 });
 

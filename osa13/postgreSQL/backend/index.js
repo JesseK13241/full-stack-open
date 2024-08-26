@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+const errorHandler = require("./util/errorHandler");
+
 app.use(express.json());
 require("express-async-errors");
 
@@ -15,10 +17,7 @@ app.use("/api/blogs", blogRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/login", loginRouter);
 
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({ error: "Internal server error" });
-});
+app.use(errorHandler);
 
 const start = async () => {
   await connectToDatabase();
