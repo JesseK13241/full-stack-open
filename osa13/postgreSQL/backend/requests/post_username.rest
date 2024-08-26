@@ -1,0 +1,6 @@
+POST http://localhost:3001/api/users/admin2
+Content-Type: application/json
+
+{
+    "newName": "admin5"
+}
