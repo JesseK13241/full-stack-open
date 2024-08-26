@@ -29,7 +29,13 @@ blogRouter.post("/", tokenExtractor, async (req, res) => {
 });
 
 const blogFinder = async (req, res, next) => {
-  const blog = await Blog.findByPk(req.params.id);
+  const blog = await Blog.findByPk(req.params.id, {
+    attributes: { exclude: ["userId"] },
+    include: {
+      model: User,
+      attributes: ["name", "id"]
+    }
+  });
   if (!blog) {
     return res.status(404).json({ error: "Blog not found" });
   }
