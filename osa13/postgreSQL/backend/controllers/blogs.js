@@ -52,12 +52,18 @@ blogRouter.get("/:id", blogFinder, async (req, res) => {
   res.json(req.blog);
 });
 
-blogRouter.put("/:id", blogFinder, async (req, res) => {
+blogRouter.put("/:id", blogFinder, tokenExtractor, async (req, res) => {
+  if (req.decodedToken.id !== req.blog.userId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
   await req.blog.update({ likes: req.body.likes });
   res.json(req.blog);
 });
 
-blogRouter.delete("/:id", blogFinder, async (req, res) => {
+blogRouter.delete("/:id", blogFinder, tokenExtractor, async (req, res) => {
+  if (req.decodedToken.id !== req.blog.userId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
   await req.blog.destroy();
   res.status(204).end();
 });
