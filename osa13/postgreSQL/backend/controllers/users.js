@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { User, Blog } = require("../models");
+const { User, Blog, Readlist } = require("../models");
 const tokenExtractor = require("../util/tokenExtractor.js");
 
 const isAdmin = async (req, res, next) => {
@@ -26,10 +26,18 @@ router.post("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   const user = await User.findByPk(req.params.id, {
-    include: {
-      model: Blog,
-      attributes: ["title", "id"]
-    }
+    include: [
+      {
+        model: Blog,
+        attributes: ["title", "id"]
+      },
+      {
+        model: Blog,
+        as: "markedBlogs",
+        attributes: { exclude: ["userId"] },
+        through: { attributes: [] }
+      }
+    ]
   });
   if (user) {
     res.json(user);

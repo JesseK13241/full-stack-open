@@ -10,5 +10,6 @@ Blog.belongsToMany(User, { through: Readlist, as: 'usersMarked' })
 
 module.exports = {
   Blog,
-  User
+  User,
+  Readlist
 };
