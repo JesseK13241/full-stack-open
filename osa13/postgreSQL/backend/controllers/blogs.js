@@ -60,7 +60,7 @@ blogRouter.get("/", async (req, res) => {
         }}
       ]
     },
-    orded: [["likes", "DESC"]]
+    order: [["likes", "DESC"]]
   });
   res.json(blogs);
 });
