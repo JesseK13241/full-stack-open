@@ -1,6 +1,14 @@
 const router = require("express").Router();
-
 const { User, Blog } = require("../models");
+const tokenExtractor = require("../util/tokenExtractor.js");
+
+const isAdmin = async (req, res, next) => {
+  const user = await User.findByPk(req.decodedToken.id);
+  if (!user.admin) {
+    return res.status(401).json({ error: "operation not permitted" });
+  }
+  next();
+};
 
 router.get("/", async (req, res) => {
   const users = await User.findAll({
@@ -21,8 +29,8 @@ router.get("/:id", async (req, res) => {
     include: {
       model: Blog,
       attributes: ["title", "id"]
-    }}
-  );
+    }
+  });
   if (user) {
     res.json(user);
   } else {
@@ -37,6 +45,22 @@ router.post("/:username", async (req, res) => {
 
   if (user) {
     user.set({ name: newName });
+    await user.save();
+    res.json(user);
+  } else {
+    res.status(404).end();
+  }
+});
+
+router.put("/:username", tokenExtractor, isAdmin, async (req, res) => {
+  const user = await User.findOne({
+    where: {
+      username: req.params.username
+    }
+  });
+
+  if (user) {
+    user.disabled = req.body.disabled;
     await user.save();
     res.json(user);
   } else {

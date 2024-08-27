@@ -1,23 +1,8 @@
 const { User, Blog } = require("../models");
 const express = require("express");
 const blogRouter = express.Router();
-const jwt = require("jsonwebtoken");
-const { SECRET } = require("../util/config");
 const { Op } = require("sequelize");
-
-const tokenExtractor = (req, res, next) => {
-  const authorization = req.get("authorization");
-  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
-    try {
-      req.decodedToken = jwt.verify(authorization.substring(7), SECRET);
-      next();
-    } catch (error) {
-      next(error);
-    }
-  } else {
-    next({ name: "JsonWebTokenError", message: "Token missing or invalid" });
-  }
-};
+const tokenExtractor = require("../util/tokenExtractor.js");
 
 blogRouter.post("/", tokenExtractor, async (req, res) => {
   const user = await User.findByPk(req.decodedToken.id);
@@ -52,12 +37,16 @@ blogRouter.get("/", async (req, res) => {
     },
     where: {
       [Op.or]: [
-        { title: {
-          [Op.iLike]: `%${req.query.search ? req.query.search : ""}%`
-        }},
-        { author: {
-          [Op.iLike]: `%${req.query.search ? req.query.search : ""}%`
-        }}
+        {
+          title: {
+            [Op.iLike]: `%${req.query.search ? req.query.search : ""}%`
+          }
+        },
+        {
+          author: {
+            [Op.iLike]: `%${req.query.search ? req.query.search : ""}%`
+          }
+        }
       ]
     },
     order: [["likes", "DESC"]]
@@ -69,7 +58,7 @@ blogRouter.get("/:id", blogFinder, async (req, res) => {
   res.json(req.blog);
 });
 
-blogRouter.put("/:id", blogFinder, tokenExtractor, async (req, res) => {  
+blogRouter.put("/:id", blogFinder, tokenExtractor, async (req, res) => {
   if (req.decodedToken.id !== req.blog.userId) {
     return res.status(401).json({ error: "Unauthorized" });
   }

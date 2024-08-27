@@ -1,0 +1,7 @@
+PUT http://localhost:3001/api/users/username@google.com
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluMTBAZ29vZ2xlLmNvbSIsImlkIjoxLCJpYXQiOjE3MjQ3Njg3NTR9.mxeoa1plyo8tqLJNOtnONvXSfejJOiqyoPM66f2S-r0
+
+{
+    "disabled": true
+}
