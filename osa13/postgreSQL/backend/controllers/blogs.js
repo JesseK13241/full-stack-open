@@ -3,6 +3,7 @@ const express = require("express");
 const blogRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const { SECRET } = require("../util/config");
+const { Op } = require("sequelize");
 
 const tokenExtractor = (req, res, next) => {
   const authorization = req.get("authorization");
@@ -49,6 +50,11 @@ blogRouter.get("/", async (req, res) => {
     include: {
       model: User,
       attributes: ["name"]
+    },
+    where: {
+      title: {
+        [Op.iLike]: `%${req.query.search ? req.query.search : ""}%`
+      }
     }
   });
   res.json(blogs);
