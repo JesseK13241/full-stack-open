@@ -10,10 +10,13 @@ const { PORT } = require("./util/config");
 const { connectToDatabase } = require("./util/db");
 
 const blogRouter = require("./controllers/blogs");
+const authorRouter = require("./controllers/authors.js");
 const usersRouter = require("./controllers/users");
 const loginRouter = require("./controllers/login");
 
 app.use("/api/blogs", blogRouter);
+app.use("/api/authors", authorRouter);
+
 app.use("/api/users", usersRouter);
 app.use("/api/login", loginRouter);
 
