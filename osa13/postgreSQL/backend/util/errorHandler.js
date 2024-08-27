@@ -17,7 +17,10 @@ const errorHandler = (error, req, res, next) => {
     return res.status(401).json({ error: "Invalid token" });
   }
 
-  // Default to 500 server error
+  if (error.name === "TokenExpiredError") {
+    return res.status(401).json({ error: "Token expired" });
+  }
+
   return res.status(500).json({ error: "Internal server error" });
 };
 

@@ -1,11 +1,11 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluQGdvb2dsZS5jb20iLCJpZCI6MSwiaWF0IjoxNzI0NzcyMjg2fQ.uRZaihJfrNn_LHf-1jHPJ3QTzQk3bY8dXM_aI2ViTcI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluQGdvb2dsZS5jb20iLCJpZCI6MSwiaWF0IjoxNzI0Nzc5MTA4LCJleHAiOjE3MjQ3ODI3MDh9.gEMkcdt5G7S53bkBk10a99mOnm-OxNiHggPFc1zZKRM
 
 {
-    "author": "new2 author",
-    "url": "new2 url",
-    "title": "new2 title",
+    "author": "expired author",
+    "url": "expired url",
+    "title": "expired title",
     "year": 2012
 }
 

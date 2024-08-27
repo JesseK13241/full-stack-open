@@ -20,7 +20,6 @@ readinglistRouter.put("/:id", tokenExtractor, async (req, res) => {
   readlistEntry.set({ readStatus: req.body.readStatus });
   await readlistEntry.save();
 
-  // SequelizeValidationError notNull Violation: readlist.readStatus cannot be null
   res.json(readlistEntry);
 });
 
