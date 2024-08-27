@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const { User, Blog, Readlist } = require("../models");
 const tokenExtractor = require("../util/tokenExtractor.js");
+const { Op } = require("sequelize");
 
 const isAdmin = async (req, res, next) => {
   const user = await User.findByPk(req.decodedToken.id);
@@ -25,6 +26,12 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
+  const where = {}
+
+  if (req.query.read) {
+    where.readStatus = req.query.read === "true";
+  }
+
   const user = await User.findByPk(req.params.id, {
     include: [
       {
@@ -35,9 +42,9 @@ router.get("/:id", async (req, res) => {
         model: Blog,
         as: "markedBlogs",
         attributes: { exclude: ["userId"] },
-        through: { attributes: ["readStatus", "id"] }
+        through: { attributes: ["readStatus", "id"], where},
       }
-    ]
+    ],
   });
   if (user) {
     res.json(user);
