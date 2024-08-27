@@ -31,7 +31,6 @@ blogRouter.post("/", tokenExtractor, async (req, res) => {
 
 const blogFinder = async (req, res, next) => {
   const blog = await Blog.findByPk(req.params.id, {
-    attributes: { exclude: ["userId"] },
     include: {
       model: User,
       attributes: ["name", "id"]
@@ -60,7 +59,8 @@ blogRouter.get("/", async (req, res) => {
           [Op.iLike]: `%${req.query.search ? req.query.search : ""}%`
         }}
       ]
-    }
+    },
+    orded: [["likes", "DESC"]]
   });
   res.json(blogs);
 });
@@ -69,7 +69,7 @@ blogRouter.get("/:id", blogFinder, async (req, res) => {
   res.json(req.blog);
 });
 
-blogRouter.put("/:id", blogFinder, tokenExtractor, async (req, res) => {
+blogRouter.put("/:id", blogFinder, tokenExtractor, async (req, res) => {  
   if (req.decodedToken.id !== req.blog.userId) {
     return res.status(401).json({ error: "Unauthorized" });
   }
