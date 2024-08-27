@@ -5,6 +5,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkb
 {
     "author": "new2 author",
     "url": "new2 url",
-    "title": "new2 title"
+    "title": "new2 title",
+    "year": 2012
 }
 
