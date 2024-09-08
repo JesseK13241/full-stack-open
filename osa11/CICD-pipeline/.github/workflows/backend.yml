@@ -1,0 +1,44 @@
+name: backend pipeline
+
+on:
+  push:
+    paths:
+      - 'backend/**'
+  pull_request:
+    paths:
+      - 'backend/**'
+
+jobs:
+  setup_and_install:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          cd backend
+          npm install
+
+  check_style:
+    needs: [setup_and_install]
+    runs-on: ubuntu-20.04
+    if: ${{ github.event_name == 'push' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check style
+        run: |
+          cd backend
+          npm install
+          npm run eslint
+
+  tag_release_backend:
+    needs: [check_style]
+    runs-on: ubuntu-20.04
+    if: |
+      !contains(join(github.event.commits.*.message, ' '), '#skip')
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bump backend Tag
+        uses: anothrNick/github-tag-action@1.70.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.CICD_TOKEN }}
+          DEFAULT_BUMP: patch
