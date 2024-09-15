@@ -1,1 +1,1 @@
-Palautusreposito kurssille [Full Stack Open 2023](https://fullstackopen.com)
+Palautusreposito kurssille [Full Stack Open 2023](https://fullstackopen.com).
